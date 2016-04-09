@@ -55,9 +55,11 @@ except ImportError:
 BACKUP_NAME = 'pythonista_backup.tar.bz2'
 BACKUP_COPY = 'pythonista_backup.{:%Y%m%d_%H%M%S}.tar.bz2'.format(datetime.datetime.now())
 BACKUP_FILE = os.path.join(BASE_DIR, BACKUP_NAME)
-CONF_FILE = os.path.join(BASE_DIR, 'aws.conf')
+SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
+CONF_FILE = os.path.join(SCRIPT_DIR, 'aws.conf')
 
-GITHUB_MASTER = 'https://raw.githubusercontent.com/khilnani/pythonista/master/'
+
+GITHUB_MASTER = 'https://raw.githubusercontent.com/khilnani/pythonista/master/tools/'
 S3BACKUP_FILE = 's3backup.py'
 
 ############################################
