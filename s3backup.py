@@ -16,7 +16,7 @@ try:
 except ImportError as ie:
 	if 'iP' in machine:
 		import requests as r
-        print 'Downloading Stash ...'
+	print 'Downloading Stash ...'
 		exec r.get('http://bit.ly/get-stash').text
 		print('Please run Stash and run: pip install boto')
 	elif 'x86_64' in machine:
