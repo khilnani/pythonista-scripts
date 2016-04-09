@@ -61,7 +61,9 @@ def load_config():
 			for key in conf:
 				os.environ[key] = conf[key]
 		except Exception as e:
+			logging.error('Config load error:')
 			logging.error(e)
+			sys.exit()
 
 def setup_logging(log_level='INFO'):
 	log_format = "%(message)s"
