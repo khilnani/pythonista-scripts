@@ -1,4 +1,4 @@
-import os, platform, sys, urllib2
+import os, platform, sys, logging, urllib2
 
 machine = platform.machine()
 print 'Platform system:' + machine
@@ -12,6 +12,12 @@ GITHUB_MASTER = 'https://raw.githubusercontent.com/khilnani/pythonista/master/'
 S3BACKUP_FILE = 's3backup.py'
 S3CONF_FILE = 'sample.aws.conf'
 S3CONF_DEST_FILE = 'aws.conf'
+
+def setup_logging(log_level='INFO'):
+	log_format = "%(message)s"
+	logging.addLevelName(15, 'FINE')
+	logging.basicConfig(format=log_format, level=log_level)
+
 
 def download_file(src, dest):
   logging.info('Reading %s' % (src))
