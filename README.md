@@ -12,3 +12,11 @@ Scripts intended to be used with the iOS [Pythonista](http://omz-software.com/py
     - Linux/Mac OS Terminal:
       - Run: `python -c "import urllib2; exec urllib2.urlopen('http://khl.io/s3backupv1').read()"`
   - AWS Config: `aws.conf` (Template created by the installer)
+
+- extensions
+  - Pythonista extensions for the iOS homescreen shortcuts and actions
+  - Installation:
+    - Pythonista console:
+      - Run: `import urllib2; exec urllib2.urlopen('http://khl.io/extensionsv1').read()`
+    - Linux/Mac OS Terminal:
+      - Run: `python -c "import urllib2; exec urllib2.urlopen('http://khl.io/extensionsv1').read()"`
