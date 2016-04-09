@@ -16,7 +16,7 @@ try:
 except ImportError as ie:
 	if 'iP' in machine:
 		import requests as r
-	print 'Downloading Stash ...'
+		print 'Downloading Stash ...'
 		exec r.get('http://bit.ly/get-stash').text
 		print('Please run Stash and run: pip install boto')
 	elif 'x86_64' in machine:
@@ -32,7 +32,7 @@ except ImportError:
 	BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 	class console (object):
 		@staticmethod
-		def hud_alert(message, icon=None, durataion=None):
+		def hud_alert(message, icon=None, duration=None):
 			print message
 
 		@staticmethod
