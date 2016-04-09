@@ -106,7 +106,7 @@ def download_file(src, dest):
 	logging.info('Done.')
 
 def update_script():
-	download_file(GITHUB_MASTER+S3BACKUP_FILE, os.path.join(BASE_DIR, S3BACKUP_FILE))
+	download_file(GITHUB_MASTER+S3BACKUP_FILE, os.path.join(SCRIPT_DIR, S3BACKUP_FILE))
 
 def bucket_exists(s3, bucket_name):
 	logging.info("Connecting to: %s" % bucket_name)
