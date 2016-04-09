@@ -18,7 +18,7 @@ except ImportError as ie:
 		import requests as r
 		print 'Downloading Stash ...'
 		exec r.get('http://bit.ly/get-stash').text
-		print('Please run Stash (launch_stash.py) and run: pip install boto')
+		print('In StaSh run: pip install boto')
 		print('Restart Pythonista and re-run this script')
 	elif 'x86_64' in machine:
 		print('Please run: pip install boto')
