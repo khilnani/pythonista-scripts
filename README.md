@@ -19,9 +19,9 @@ Scripts intended to be used with the iOS [Pythonista](http://omz-software.com/py
 ## Installation
 
 - Pythonista console:
- - Run: `import urllib2; exec urllib2.urlopen('http://khl.io/s3backupv1').read()`
+ - Run: `import urllib2; exec urllib2.urlopen('http://khl.io/pythonista-scripts').read()`
 - Linux/Mac OS Terminal:
- - Run: `python -c "import urllib2; exec urllib2.urlopen('http://khl.io/s3backupv1').read()"`
+ - Run: `python -c "import urllib2; exec urllib2.urlopen('http://khl.io/pythonista-scripts').read()"`
 
 ### Configuration
 
