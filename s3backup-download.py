@@ -8,15 +8,19 @@ if 'iP' in machine:
 else:
   BASE_DIR = os.getcwd()
 
+############################################
+
 GITHUB_MASTER = 'https://raw.githubusercontent.com/khilnani/pythonista/master/'
 S3BACKUP_FILE = 's3backup.py'
 S3CONF_FILE = 'sample.aws.conf'
 S3CONF_DEST_FILE = 'aws.conf'
 
+############################################
+
 def setup_logging(log_level='INFO'):
-	log_format = "%(message)s"
-	logging.addLevelName(15, 'FINE')
-	logging.basicConfig(format=log_format, level=log_level)
+  log_format = "%(message)s"
+  logging.addLevelName(15, 'FINE')
+  logging.basicConfig(format=log_format, level=log_level)
 
 
 def download_file(src, dest):
@@ -28,9 +32,15 @@ def download_file(src, dest):
   f.close()
   logging.info('Done.')
 
-download_file(GITHUB_MASTER+S3BACKUP_FILE, os.path.join(BASE_DIR, S3BACKUP_FILE))
+############################################
 
-download_file(GITHUB_MASTER+S3CONF_FILE, os.path.join(BASE_DIR, S3CONF_DEST_FILE))
+def main():
+  download_file(GITHUB_MASTER+S3BACKUP_FILE, os.path.join(BASE_DIR, S3BACKUP_FILE))
+  download_file(GITHUB_MASTER+S3CONF_FILE, os.path.join(BASE_DIR, S3CONF_DEST_FILE))
+  print 'Please edit %s and then run: %s' % (S3CONF_DEST_FILE, S3BACKUP_FILE)
 
+############################################
 
-print 'Please edit %s and then run: %s' % (S3CONF_DEST_FILE, S3BACKUP_FILE)
+if __name__ == '__main__':
+  main()
+  
