@@ -1,6 +1,14 @@
 import requests as r
+import os, platform
 
-BASE_DIR = os.path.expanduser('~/Documents')
+machine = platform.machine()
+print 'Platform system:' + machine
+
+if 'iP' in machine:
+  BASE_DIR = os.path.expanduser('~/Documents')
+else:
+  BASE_DIR = os.getcwd()
+
 GITHUB_MASTER = 'https://raw.githubusercontent.com/khilnani/pythonista/master'
 S3BACKUP_FILE = 's3backup.py'
 S3CONF_FILE = 'aws.conf'
