@@ -5,7 +5,7 @@ Scripts intended to be used with the iOS [Pythonista](http://omz-software.com/py
 ## Key scripts
 
 - s3backup.py
-  - Backup the Documents directory to a tar zip file in an Amazon S3 bucket
+  - Backup and restore the working directory to a tar zip file in an Amazon S3 bucket
   - Requires: `aws.conf` (created by the installer below)
   - Installation
     - Pythonista: `import requests as r; exec r.get('http://khl.io/s3backup').text`
