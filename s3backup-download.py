@@ -1,14 +1,19 @@
 import requests as r
 
 BASE_DIR = os.path.expanduser('~/Documents')
-S3BACKUP_FILE = os.path.join(BASE_DIR, 's3backup.py')
+GITHUB_MASTER = 'https://raw.githubusercontent.com/khilnani/pythonista/master'
+S3BACKUP_FILE = 's3backup.py'
+S3CONF_FILE = 'aws.conf'
 
-print 'Reading s3backup from github'
-file_content = r.get('https://raw.githubusercontent.com/khilnani/pythonista/master/s3backup.py').text
+def download_file(name):
+  print 'Reading %s from github' % name
+  file_content = r.get(GITHUB_MASTER + name).text
+  print 'Writing %s' % name
+  file_path = os.path.join(BASE_DIR, name)
+  f = open(file_path, 'w')
+  f.write(file_content)
+  f.close()
+  print 'Done.'
 
-print 'Writing s3backup.py'
-s3backup = open(S3BACKUP_FILE, 'w')
-s3backup.write(file_content)
-s3backup.close()
-
-print 'Done.'
+download_file(S3BACKUP_FILE)
+download_file(S3CONF_FILE)
