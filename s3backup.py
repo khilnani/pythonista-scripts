@@ -179,7 +179,7 @@ def main():
 	load_config()
 	mode = get_mode()
 
-	bucket_name = os.getenv('AWS_S3_BUCKET', None)
+	bucket_name = os.getenv('PYTHONISTA_AWS_S3_BUCKET', None)
 
 	if mode == 'list':
 		list_tarfile(BACKUP_FILE, BASE_DIR)
