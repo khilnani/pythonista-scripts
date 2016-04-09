@@ -22,7 +22,7 @@ print('Installing to: %s' % INSTALL_DIR)
 
 if 'iP' in machine:
 	BASE_DIR = os.path.expanduser('~/Documents')
-else
+else:
 	BASE_DIR = os.getcwd()
 
 ############################################
@@ -67,7 +67,7 @@ def unzip_file(zip_file, extract_to):
 	zip_ref = zipfile.ZipFile(zip_file, 'r')
 	zip_ref.extractall(extract_to)
 	zip_ref.close()
-    logging.info('Done.')
+	logging.info('Done.')
 
 def get_selection():
 	sel = None
@@ -88,9 +88,9 @@ def download_s3backup():
 	print 'Please edit %s and then run: %s' % (S3CONF, S3BACKUP)
 
 def download_archive():
-    download_loc = os.path.join(INSTALL_DIR, ARCHIVE)
+	download_loc = os.path.join(INSTALL_DIR, ARCHIVE)
 	download_file(GITHUB_ARCHIVE, download_loc)
-    unzip_file(download_loc, INSTALL_DIR)
+	unzip_file(download_loc, INSTALL_DIR)
 
 ############################################
 
