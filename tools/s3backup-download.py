@@ -1,12 +1,7 @@
 import os, platform, sys, logging, urllib2
 
-machine = platform.machine()
-print 'Platform system: ' + machine
-
-if 'iP' in machine:
-  BASE_DIR = os.path.expanduser('~/Documents')
-else:
-  BASE_DIR = os.getcwd()
+INSTALL_DIR = os.getcwd()
+print('Installing to: %s' % INSTALL_DIR)
 
 ############################################
 
@@ -36,8 +31,8 @@ def download_file(src, dest):
 
 def main():
   setup_logging()
-  download_file(GITHUB_MASTER+S3BACKUP_FILE, os.path.join(BASE_DIR, S3BACKUP_FILE))
-  download_file(GITHUB_MASTER+S3CONF_FILE, os.path.join(BASE_DIR, S3CONF_DEST_FILE))
+  download_file(GITHUB_MASTER+S3BACKUP_FILE, os.path.join(INSTALL_DIR, S3BACKUP_FILE))
+  download_file(GITHUB_MASTER+S3CONF_FILE, os.path.join(INSTALL_DIR, S3CONF_DEST_FILE))
   print 'Please edit %s and then run: %s' % (S3CONF_DEST_FILE, S3BACKUP_FILE)
 
 ############################################
