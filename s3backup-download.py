@@ -24,7 +24,7 @@ def download_file(src, dest):
 
 download_file(GITHUB_MASTER+S3BACKUP_FILE, os.path.join(BASE_DIR, S3BACKUP_FILE))
 
-download_file(GITHUB_MASTER+S3CONF_FILE, os.path.join(BASE_DIR, S3CONF_DEST_FILE)))
+download_file(GITHUB_MASTER+S3CONF_FILE, os.path.join(BASE_DIR, S3CONF_DEST_FILE))
 
 
 print 'Please edit %s and then run: %s' % (S3CONF_DEST_FILE, S3BACKUP_FILE)
