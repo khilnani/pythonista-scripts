@@ -10,7 +10,7 @@ else:
 
 ############################################
 
-GITHUB_MASTER = 'https://raw.githubusercontent.com/khilnani/pythonista/master/tools'
+GITHUB_MASTER = 'https://raw.githubusercontent.com/khilnani/pythonista/master/tools/'
 S3BACKUP_FILE = 's3backup.py'
 S3CONF_FILE = 'sample.aws.conf'
 S3CONF_DEST_FILE = 'aws.conf'
