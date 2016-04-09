@@ -9,4 +9,6 @@ Scripts intended to be used with the iOS [Pythonista](http://omz-software.com/py
   - Requires: `aws.conf` (created by the installer below)
   - Installation
     - Pythonista: `import requests as r; exec r.get('http://khl.io/s3backup').text`
-    - Linux/Mac OS: `python -c "import requests as r; exec r.get('http://khl.io/s3backup').text"`
+    - Linux/Mac OS:
+      - Install requests: `pip install requests`
+      - Run: `python -c "import requests as r; exec r.get('http://khl.io/s3backup').text"`
