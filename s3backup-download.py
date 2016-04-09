@@ -25,3 +25,5 @@ def download_file(src, dest):
 
 download_file(S3BACKUP_FILE, S3BACKUP_FILE)
 download_file(S3CONF_FILE, S3CONF_DEST_FILE)
+
+print 'Please edit %s and then run: %s' % (S3CONF_DEST_FILE, S3BACKUP_FILE)
