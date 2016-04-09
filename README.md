@@ -8,7 +8,8 @@ Scripts intended to be used with the iOS [Pythonista](http://omz-software.com/py
   - Backup and restore the working directory to a tar zip file in an Amazon S3 bucket
   - Requires: `aws.conf` (created by the installer below)
   - Installation
-    - Pythonista: `import requests as r; exec r.get('http://khl.io/s3backup').text`
+    - Pythonista: 
+      - Run: `import requests as r; exec r.get('http://khl.io/s3backup').text`
     - Linux/Mac OS:
       - Install requests: `pip install requests`
       - Run: `python -c "import requests as r; exec r.get('http://khl.io/s3backup').text"`
