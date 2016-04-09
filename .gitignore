@@ -1,7 +1,6 @@
 
 #config files
-**/*.yml
-**/*.conf
+aws.conf
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
