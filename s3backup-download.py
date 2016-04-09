@@ -14,16 +14,17 @@ S3CONF_FILE = 'sample.aws.conf'
 S3CONF_DEST_FILE = 'aws.conf'
 
 def download_file(src, dest):
-  print 'Reading %s from %s' % (src, GITHUB_MASTER + src)
-  file_content = urllib2.urlopen(GITHUB_MASTER + src).read()
-  print 'Writing %s' % dest
-  file_path = os.path.join(BASE_DIR, dest)
-  f = open(file_path, 'w')
+  logging.info('Reading %s' % (src))
+  file_content = urllib2.urlopen(src).read()
+  logging.info('Writing %s' % dest)
+  f = open(dest, 'w')
   f.write(file_content)
   f.close()
-  print 'Done.'
+  logging.info('Done.')
 
-download_file(S3BACKUP_FILE, S3BACKUP_FILE)
-download_file(S3CONF_FILE, S3CONF_DEST_FILE)
+download_file(GITHUB_MASTER+S3BACKUP_FILE, os.path.join(BASE_DIR, S3BACKUP_FILE))
+
+download_file(GITHUB_MASTER+S3CONF_FILE, os.path.join(BASE_DIR, S3CONF_DEST_FILE)))
+
 
 print 'Please edit %s and then run: %s' % (S3CONF_DEST_FILE, S3BACKUP_FILE)

@@ -1,6 +1,6 @@
 # coding: utf-8
 
-import platform, os, sys, tarfile, logging, datetime, json
+import platform, os, sys, tarfile, logging, datetime, json, urllib2
 
 ###########################################
 
@@ -53,6 +53,9 @@ BACKUP_COPY = 'pythonista_backup.{:%Y%m%d_%H%M%S}.tar.bz2'.format(datetime.datet
 BACKUP_FILE = os.path.join(BASE_DIR, BACKUP_NAME)
 CONF_FILE = os.path.join(BASE_DIR, 'aws.conf')
 
+GITHUB_MASTER = 'https://raw.githubusercontent.com/khilnani/pythonista/master/'
+S3BACKUP_FILE = 's3backup.py'
+
 ############################################
 
 def load_config():
@@ -82,8 +85,22 @@ list
 archive
 extract
 restore
-backup''', "", "")
+backup
+update script
+''', "", "")
 	return mode
+
+def download_file(src, dest):
+  logging.info('Reading %s' % (src))
+  file_content = urllib2.urlopen(src).read()
+  logging.info('Writing %s' % dest)
+  f = open(dest, 'w')
+  f.write(file_content)
+  f.close()
+  logging.info('Done.')
+
+def update_script():
+	download_file(GITHUB_MASTER+S3BACKUP_FILE, os.path.join(BASE_DIR, S3BACKUP_FILE))
 
 def bucket_exists(s3, bucket_name):
 	logging.info("Connecting to: %s" % bucket_name)
@@ -185,7 +202,9 @@ def main():
 
 	bucket_name = os.getenv('PYTHONISTA_AWS_S3_BUCKET', None)
 
-	if mode == 'list':
+	if mode == 'update script':
+		update_script()
+	elif mode == 'list':
 		list_tarfile(BACKUP_FILE, BASE_DIR)
 	elif mode == 'archive':
 		remove_archive(BACKUP_FILE)
