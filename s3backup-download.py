@@ -1,7 +1,7 @@
 import os, platform, sys, logging, urllib2
 
 machine = platform.machine()
-print 'Platform system:' + machine
+print 'Platform system: ' + machine
 
 if 'iP' in machine:
   BASE_DIR = os.path.expanduser('~/Documents')
