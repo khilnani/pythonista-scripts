@@ -5,7 +5,7 @@ if appex.is_running_extension():
 	text = appex.get_text()
 else:
 	text = clipboard.get()
-filename = '{:%Y%m%d-%H%M%S}-clip.txt'.format(datetime.datetime.now())
+filename = 'clip-{:%Y%m%d-%H%M%S}.txt'.format(datetime.datetime.now())
 with open(filename, 'w') as f:
 	f.write(text)
 console.hud_alert('Saved to: ' + filename)

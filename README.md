@@ -4,10 +4,10 @@ Scripts intended to be used with the iOS [Pythonista](http://omz-software.com/py
 
 ## Key scripts
 
-- s3backup.py
+- tools/s3backup.py
   - Backup and restore the working directory to a tar zip file in an Amazon S3 bucket
   - Installation:
-    - Pythonista console: 
+    - Pythonista console:
       - Run: `import urllib2; exec urllib2.urlopen('http://khl.io/s3backup').read()`
     - Linux/Mac OS Terminal:
       - Run: `python -c "import urllib2; exec urllib2.urlopen('http://khl.io/s3backup').read()"`
