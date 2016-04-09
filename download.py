@@ -76,7 +76,8 @@ def get_selection():
 	else:
 		sel = console.input_alert('''
 Select an option:
-1. s3backup
+1. s3 backup/restore script
+2. download all files
 ''', "", "")
 	return sel
 
