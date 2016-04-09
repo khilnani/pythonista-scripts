@@ -18,8 +18,12 @@ except ImportError as ie:
 		import requests as r
 		print 'Downloading Stash ...'
 		exec r.get('http://bit.ly/get-stash').text
-		print('In StaSh run: pip install boto')
-		print('Restart Pythonista and re-run this script')
+		from stash import stash
+		_stash = stash.StaSh()
+		print('Installing AWS boto library ...')
+		_stash('pip install boto')
+		print('AWS boto library installed.')
+		print('Please restart Pythonista and re-run this script')
 	elif 'x86_64' in machine:
 		print('Please run: pip install boto')
 	sys.exit()
@@ -91,13 +95,13 @@ update script
 	return mode
 
 def download_file(src, dest):
-  logging.info('Reading %s' % (src))
-  file_content = urllib2.urlopen(src).read()
-  logging.info('Writing %s' % dest)
-  f = open(dest, 'w')
-  f.write(file_content)
-  f.close()
-  logging.info('Done.')
+	logging.info('Reading %s' % (src))
+	file_content = urllib2.urlopen(src).read()
+	logging.info('Writing %s' % dest)
+	f = open(dest, 'w')
+	f.write(file_content)
+	f.close()
+	logging.info('Done.')
 
 def update_script():
 	download_file(GITHUB_MASTER+S3BACKUP_FILE, os.path.join(BASE_DIR, S3BACKUP_FILE))
