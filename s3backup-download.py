@@ -1,4 +1,4 @@
-import os, platform, sys
+import os, platform, sys, urllib2
 
 machine = platform.machine()
 print 'Platform system:' + machine
@@ -10,23 +10,18 @@ else:
 
 GITHUB_MASTER = 'https://raw.githubusercontent.com/khilnani/pythonista/master/'
 S3BACKUP_FILE = 's3backup.py'
-S3CONF_FILE = 'aws.conf'
+S3CONF_FILE = 'sample.aws.conf'
+S3CONF_DEST_FILE = 'aws.conf'
 
-try:
-  import requests as r
-except ImportError:
-  print('Please install: pip install requests')
-  sys.exit()
-
-def download_file(name):
-  print 'Reading %s from %s' % (name, GITHUB_MASTER + name)
-  file_content = r.get(GITHUB_MASTER + name).text
-  print 'Writing %s' % name
-  file_path = os.path.join(BASE_DIR, name)
+def download_file(src, dest):
+  print 'Reading %s from %s' % (src, GITHUB_MASTER + src)
+  file_content = urllib2.urlopen(GITHUB_MASTER + src).read()
+  print 'Writing %s' % dest
+  file_path = os.path.join(BASE_DIR, dest)
   f = open(file_path, 'w')
   f.write(file_content)
   f.close()
   print 'Done.'
 
-download_file(S3BACKUP_FILE)
-download_file(S3CONF_FILE)
+download_file(S3BACKUP_FILE, S3BACKUP_FILE)
+download_file(S3CONF_FILE, S3CONF_DEST_FILE)
