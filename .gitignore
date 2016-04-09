@@ -1,8 +1,9 @@
 
 # Config files
-aws.conf
 dropbox_sync/
 .pypi_packages.
+**/aws.conf
+**/extensions.conf
 
 # noise
 **/.DS_Store
