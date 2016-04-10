@@ -4,6 +4,7 @@ pythonista-scripts.zip
 pythonista-scripts-master/
 dropbox_sync/
 .pypi_packages.
+.tabs.*
 **/aws.conf
 **/jira.conf
 **/save.conf
