@@ -140,7 +140,7 @@ def download_archive():
 
 def review_archive():
 	download_file(GITHUB_ARCHIVE, ARCHIVE_PATH)
-	list_zip(download_loc)
+	list_zip(ARCHIVE_PATH)
 	delete_archive()
 	logging.info('Done.')
 
