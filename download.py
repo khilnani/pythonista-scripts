@@ -69,7 +69,7 @@ def move_files(from_dir, to_dir, dry_run=False):
 		dir_partial = dirpath.split(ARCHIVE_DIR)[-1]
 		dest_dir = os.path.join(to_dir, dir_partial)
 		if not os.path.exists(dest_dir):
-			if not dryrun:
+			if not dry_run:
 				os.makedirs(dest_dir)
 		for f in filenames:
 			from_file = os.path.join(dirpath, f)
@@ -79,7 +79,7 @@ def move_files(from_dir, to_dir, dry_run=False):
 			else:
 				logging.info('  New %s' % (friendly_path(to_file)))
 			try:
-				if not dryrun:
+				if not dry_run:
 					shutil.copyfile(from_file, to_file)
 			except IOError as ioe:
 				logging.error(ioe)
