@@ -2,18 +2,20 @@ import os, shutil, platform, sys, logging, urllib2, zipfile
 
 ############################################
 
+INSTALL_DIR = os.getcwd()
+
 GITHUB_MASTER = 'https://raw.githubusercontent.com/khilnani/pythonista-scripts/master/'
 GITHUB_ARCHIVE = 'https://github.com/khilnani/pythonista-scripts/archive/master.zip'
 
-ARCHIVE_DIR = 'pythonista-scripts-master/'
-ARCHIVE = 'pythonista-scripts.zip'
+ARCHIVE_DIR_PARTIAL = 'pythonista-scripts-master/'
+ARCHIVE_DIR = os.path.join(INSTALL_DIR, ARCHIVE_DIR_PARTIAL)
+ARCHIVE_NAME = 'pythonista-scripts.zip'
+ARCHIVE_PATH = os.path.join(INSTALL_DIR, ARCHIVE_NAME)
 
 TOOLS_DIR = 'tools/'
 S3BACKUP = 's3backup.py'
 S3CONF_SAMPLE = 'sample.aws.conf'
 S3CONF = 'aws.conf'
-
-INSTALL_DIR = os.getcwd()
 
 ############################################
 
@@ -123,15 +125,16 @@ def download_s3backup():
 	print 'Please edit %s and then run: %s' % (S3CONF, S3BACKUP)
 
 def download_archive():
-	download_loc = os.path.join(INSTALL_DIR, ARCHIVE)
-	download_file(GITHUB_ARCHIVE, download_loc)
-	unzip_file(download_loc, INSTALL_DIR)
-	move_files(os.path.join(INSTALL_DIR, ARCHIVE_DIR), INSTALL_DIR)
+	download_file(GITHUB_ARCHIVE, ARCHIVE_PATH)
+	unzip_file(ARCHIVE_PATH, INSTALL_DIR)
+	move_files(ARCHIVE_DIR, INSTALL_DIR)
+	shutil.rmtree(ARCHIVE_DIR)
+	os.remove(ARCHIVE_PATH)
 
 def review_archive():
-	download_loc = os.path.join(INSTALL_DIR, ARCHIVE)
-	download_file(GITHUB_ARCHIVE, download_loc)
+	download_file(GITHUB_ARCHIVE, ARCHIVE_PATH)
 	list_zip(download_loc)
+	os.remove(ARCHIVE_PATH)
 
 ############################################
 
