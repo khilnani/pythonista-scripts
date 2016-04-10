@@ -22,7 +22,3 @@ Scripts intended to be used with the iOS [Pythonista](http://omz-software.com/py
  - Run: `import urllib2; exec urllib2.urlopen('http://khl.io/pythonista-scripts').read()`
 - Linux/Mac OS Terminal:
  - Run: `python -c "import urllib2; exec urllib2.urlopen('http://khl.io/pythonista-scripts').read()"`
-
-### Configuration
-
-- AWS Config: `tools/aws.conf` (Template created by the installer)
