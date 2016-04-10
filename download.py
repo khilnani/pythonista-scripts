@@ -56,6 +56,13 @@ def setup_logging(log_level='INFO'):
 	logging.addLevelName(15, 'FINE')
 	logging.basicConfig(format=log_format, level=log_level)
 
+def friendly_path(name):
+	if ARCHIVE_DIR_PARTIAL in name:
+		return name.split(ARCHIVE_DIR_PARTIAL)[-1]
+	if INSTALL_DIR in name:
+		return name.split(INSTALL_DIR)[-1]
+	return name
+
 def move_files(from_dir, to_dir):
 	logging.info('Moving files from %s to %s' % (from_dir, to_dir))
 	for dirpath, dirnames, filenames in os.walk(from_dir):
@@ -65,9 +72,9 @@ def move_files(from_dir, to_dir):
 			os.makedirs(dest_dir)
 		for f in filenames:
 			from_file = os.path.join(dirpath, f)
-			from_file_partial = from_file.split(INSTALL_DIR)[-1]
+			from_file_partial = friendly_path(from_file)
 			to_file = os.path.join(dest_dir, f)
-			to_file_partial = to_file.split(INSTALL_DIR)[-1]
+			to_file_partial = friendly_path(to_file)
 			if os.path.exists(to_file):
 				logging.info('  OVERWRITE from %s to %s' % (from_file_partial, to_file_partial))
 			else:
@@ -101,8 +108,7 @@ def list_zip(zip_file):
 	logging.info('Lising zip %s' % (zip_file))
 	zip_ref = zipfile.ZipFile(zip_file, 'r')
 	for name in zip_ref.namelist():
-		partial = name.split(ARCHIVE_DIR_PARTIAL)[-1]
-		print '  %s' % (partial)
+		print '  %s' % (friendly_path(name))
 	zip_ref.close()
 
 def unzip_file(zip_file, extract_to):
