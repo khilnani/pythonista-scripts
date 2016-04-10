@@ -16,6 +16,14 @@ Scripts intended to be used with the iOS [Pythonista](http://omz-software.com/py
 
 - Sample scripts designed to work in pythonista and on linux/mac os
 
+### `site-packages/`
+
+- Pythonista specific installed library, contains modules installed via pip and manually.
+
+### `thirdparty/`
+
+- Scripts and repos I have downloaded from elsewhere
+
 ## Installation
 
 - Pythonista console:
