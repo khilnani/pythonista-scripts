@@ -78,7 +78,7 @@ def move_files(from_dir, to_dir, dry_run=False):
 			if os.path.exists(to_file):
 				logging.info('  %sEXISTS %s' % (pre_msg, friendly_path(to_file)))
 			else:
-				logging.info('  %sNew %s' % (pre_msg, friendly_path(to_file)))
+				logging.info('  %s%s' % (pre_msg, friendly_path(to_file)))
 			try:
 				if not dry_run:
 					shutil.copyfile(from_file, to_file)
