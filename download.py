@@ -1,9 +1,11 @@
-import os, platform, sys, logging, urllib2, zipfile
+import os, shutil, platform, sys, logging, urllib2, zipfile
 
 ############################################
 
 GITHUB_MASTER = 'https://raw.githubusercontent.com/khilnani/pythonista-scripts/master/'
 GITHUB_ARCHIVE = 'https://github.com/khilnani/pythonista-scripts/archive/master.zip'
+
+ARCHIVE_DIR = 'pythonista-scripts-master/'
 ARCHIVE = 'pythonista-scripts.zip'
 
 TOOLS_DIR = 'tools/'
@@ -52,6 +54,13 @@ def setup_logging(log_level='INFO'):
 	logging.addLevelName(15, 'FINE')
 	logging.basicConfig(format=log_format, level=log_level)
 
+def move_files(from_dir, to_dir):
+	logging.info('Moving files from %s to %s' % (from_dir, to_dir))
+	for f in os.listdir(from_dir):
+		src = os.path.join(from_dir, f)
+		dest = os.path.join(to_dir, f)
+		shutil.move(src, dest)
+	logging.info('Done.')
 
 def download_file(src, dest):
 	logging.info('Downloading %s' % (src))
@@ -60,6 +69,14 @@ def download_file(src, dest):
 	f = open(dest, 'w')
 	f.write(file_content)
 	f.close()
+	logging.info('Done.')
+
+def list_zip(zip_file):
+	logging.info('Lising zip %s' % (zip_file))
+	zip_ref = zipfile.ZipFile(zip_file, 'r')
+	for name in zip_ref.namelist():
+		print name
+	zip_ref.close()
 	logging.info('Done.')
 
 def unzip_file(zip_file, extract_to):
@@ -76,8 +93,9 @@ def get_selection():
 	else:
 		sel = console.input_alert('''
 Select an option:
-1. s3 backup/restore script
-2. download all files
+1. S3 backup/restore script
+2. List all files
+3. Download all files
 ''', "", "")
 	return sel
 
@@ -92,6 +110,12 @@ def download_archive():
 	download_loc = os.path.join(INSTALL_DIR, ARCHIVE)
 	download_file(GITHUB_ARCHIVE, download_loc)
 	unzip_file(download_loc, INSTALL_DIR)
+	move_files(os.path.join(INSTALL_DIR, ARCHIVE_DIR), INSTALL_DIR)
+
+def review_archive():
+	download_loc = os.path.join(INSTALL_DIR, ARCHIVE)
+	download_file(GITHUB_ARCHIVE, download_loc)
+	list_zip(download_loc)
 
 ############################################
 
@@ -103,6 +127,8 @@ def main():
 	if sel == '1':
 		download_s3backup()
 	elif sel == '2':
+		review_archive()
+	elif sel == '3':
 		download_archive()
 
 ############################################
