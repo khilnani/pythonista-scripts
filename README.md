@@ -8,10 +8,10 @@ Scripts intended to be used with the iOS [Pythonista](http://omz-software.com/py
 
 - Backup and restore the working directory to a tar zip file in an Amazon S3 bucket.
 - Pythonista:
-  - Files downloaded to and restored from the `~/Documents` directory.
+  - Files downloaded to and restored from the `~/Documents` directory
 - Linux/mac os:
-  - Files downloaded to and restored from the working directory, not the directory containing the script.
-  - Example: From this directory, run `python tools/s3backup.pp`
+  - Files downloaded to and restored from the working directory, not the directory containing the script
+  - Example: From this directory, run `python tools/s3backup.py`
 
 ### `extensions/`
 
@@ -23,7 +23,7 @@ Scripts intended to be used with the iOS [Pythonista](http://omz-software.com/py
 
 ### `site-packages/`
 
-- Pythonista specific installed library, contains modules installed via pip and manually.
+- Pythonista specific installed library, contains modules installed via pip and manually
 
 ### `thirdparty/`
 
