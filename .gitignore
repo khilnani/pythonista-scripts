@@ -1,11 +1,14 @@
 
-# Config files
+# config files
 pythonista-scripts.zip
 pythonista-scripts-master/
 dropbox_sync/
 .pypi_packages.
 **/aws.conf
-**/extensions.conf
+**/jira.conf
+**/save.conf
+code/
+downloads/
 
 # noise
 **/.DS_Store
