@@ -59,8 +59,8 @@ def move_files(from_dir, to_dir):
 	for dirpath, dirnames, filenames in os.walk(from_dir):
 		dir_partial = dirpath.split(ARCHIVE_DIR)[1]
 		dest_dir = os.path.join(to_dir, dir_partial)
-
-		os.makedirs(dest_dir)
+		if not os.path.exists(dest_dir):
+			os.makedirs(dest_dir)
 		for f in filenames:
 			from_file = os.path.join(dirpath, f)
 			to_file = os.path.join(dest_dir, f)
