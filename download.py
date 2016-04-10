@@ -64,7 +64,8 @@ def friendly_path(name):
 	return name
 
 def move_files(from_dir, to_dir, dry_run=False):
-	logging.info('Moving files from %s to %s' % (from_dir, to_dir))
+	pre_msg = 'DRY RUN: ' if dry_run else ''
+	logging.info('%sMoving files from %s to %s' % (pre_msg, from_dir, to_dir))
 	for dirpath, dirnames, filenames in os.walk(from_dir):
 		dir_partial = dirpath.split(ARCHIVE_DIR)[-1]
 		dest_dir = os.path.join(to_dir, dir_partial)
@@ -75,9 +76,9 @@ def move_files(from_dir, to_dir, dry_run=False):
 			from_file = os.path.join(dirpath, f)
 			to_file = os.path.join(dest_dir, f)
 			if os.path.exists(to_file):
-				logging.info('  EXISTS %s' % (friendly_path(to_file)))
+				logging.info('  %sEXISTS %s' % (pre_msg, friendly_path(to_file)))
 			else:
-				logging.info('  New %s' % (friendly_path(to_file)))
+				logging.info('  %sNew %s' % (pre_msg, friendly_path(to_file)))
 			try:
 				if not dry_run:
 					shutil.copyfile(from_file, to_file)
