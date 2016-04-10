@@ -65,11 +65,13 @@ def move_files(from_dir, to_dir):
 			os.makedirs(dest_dir)
 		for f in filenames:
 			from_file = os.path.join(dirpath, f)
+			from_file_partial = from_file.split(INSTALL_DIR)[-1]
 			to_file = os.path.join(dest_dir, f)
+			to_file_partial = to_file.split(INSTALL_DIR)[-1]
 			if os.path.exists(to_file):
-				logging.info('  OVERWRITE from %s to %s' % (from_file, to_file))
+				logging.info('  OVERWRITE from %s to %s' % (from_file_partial, to_file_partial))
 			else:
-				logging.info('  From %s to %s' % (from_file, to_file))
+				logging.info('  From %s to %s' % (from_file_partial, to_file_partial))
 			try:
 				shutil.copyfile(from_file, to_file)
 			except IOError as ioe:
