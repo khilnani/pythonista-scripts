@@ -63,24 +63,24 @@ def friendly_path(name):
 		return name.split(INSTALL_DIR)[-1]
 	return name
 
-def move_files(from_dir, to_dir):
+def move_files(from_dir, to_dir, dry_run=False):
 	logging.info('Moving files from %s to %s' % (from_dir, to_dir))
 	for dirpath, dirnames, filenames in os.walk(from_dir):
 		dir_partial = dirpath.split(ARCHIVE_DIR)[-1]
 		dest_dir = os.path.join(to_dir, dir_partial)
 		if not os.path.exists(dest_dir):
-			os.makedirs(dest_dir)
+			if not dryrun:
+				os.makedirs(dest_dir)
 		for f in filenames:
 			from_file = os.path.join(dirpath, f)
-			from_file_partial = friendly_path(from_file)
 			to_file = os.path.join(dest_dir, f)
-			to_file_partial = friendly_path(to_file)
 			if os.path.exists(to_file):
-				logging.info('  OVERWRITE from %s to %s' % (from_file_partial, to_file_partial))
+				logging.info('  EXISTS %s' % (friendly_path(to_file)))
 			else:
-				logging.info('  From %s to %s' % (from_file_partial, to_file_partial))
+				logging.info('  New %s' % (friendly_path(to_file)))
 			try:
-				shutil.copyfile(from_file, to_file)
+				if not dryrun:
+					shutil.copyfile(from_file, to_file)
 			except IOError as ioe:
 				logging.error(ioe)
 			except shutil.Error as e:
@@ -142,14 +142,16 @@ def download_s3backup():
 def download_archive():
 	download_file(GITHUB_ARCHIVE, ARCHIVE_PATH)
 	unzip_file(ARCHIVE_PATH, INSTALL_DIR)
-	move_files(ARCHIVE_DIR, INSTALL_DIR)
+	move_files(ARCHIVE_DIR, INSTALL_DIR, dry_run=False)
 	delete_archive_dir()
 	delete_archive()
 	logging.info('Done.')
 
 def review_archive():
 	download_file(GITHUB_ARCHIVE, ARCHIVE_PATH)
-	list_zip(ARCHIVE_PATH)
+	unzip_file(ARCHIVE_PATH, INSTALL_DIR)
+	move_files(ARCHIVE_DIR, INSTALL_DIR, dry_run=True)
+	delete_archive_dir()
 	delete_archive()
 	logging.info('Done.')
 
