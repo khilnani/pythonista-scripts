@@ -88,11 +88,11 @@ def download_file(src, dest):
 	f.close()
 
 def delete_archive_dir():
-	logging.info('Removing downloaded archive content.')
+	logging.info('Deleting downloaded archive content')
 	shutil.rmtree(ARCHIVE_DIR)
 
 def delete_archive():
-	logging.info('Removing downloaded archive.')
+	logging.info('Deleting downloaded archive')
 	os.remove(ARCHIVE_PATH)
 
 def list_zip(zip_file):
