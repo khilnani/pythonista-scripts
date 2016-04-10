@@ -67,9 +67,9 @@ def move_files(from_dir, to_dir):
 			from_file = os.path.join(dirpath, f)
 			to_file = os.path.join(dest_dir, f)
 			if os.path.exists(to_file):
-				logging.info('   OVERWRITE from %s to %s' % (from_file, to_file))
+				logging.info('  OVERWRITE from %s to %s' % (from_file, to_file))
 			else:
-				logging.info('   From %s to %s' % (from_file, to_file))
+				logging.info('  From %s to %s' % (from_file, to_file))
 			try:
 				shutil.copyfile(from_file, to_file)
 			except IOError as ioe:
@@ -78,7 +78,6 @@ def move_files(from_dir, to_dir):
 				logging.warn(e)
 			except Exception as e:
 				logging.error(e)
-	logging.info('Done.')
 
 def download_file(src, dest):
 	logging.info('Downloading %s' % (src))
@@ -87,22 +86,27 @@ def download_file(src, dest):
 	f = open(dest, 'w')
 	f.write(file_content)
 	f.close()
-	logging.info('Done.')
+
+def delete_archive_dir():
+	logging.info('Removing downloaded archive content.')
+	shutil.rmtree(ARCHIVE_DIR)
+
+def delete_archive():
+	logging.info('Removing downloaded archive.')
+	os.remove(ARCHIVE_PATH)
 
 def list_zip(zip_file):
 	logging.info('Lising zip %s' % (zip_file))
 	zip_ref = zipfile.ZipFile(zip_file, 'r')
 	for name in zip_ref.namelist():
-		print name
+		print '  %s' % (name)
 	zip_ref.close()
-	logging.info('Done.')
 
 def unzip_file(zip_file, extract_to):
 	logging.info('Unzipping %s to %s' % (zip_file, extract_to))
 	zip_ref = zipfile.ZipFile(zip_file, 'r')
 	zip_ref.extractall(extract_to)
 	zip_ref.close()
-	logging.info('Done.')
 
 def get_selection():
 	sel = None
@@ -122,19 +126,23 @@ Select an option:
 def download_s3backup():
 	download_file(GITHUB_MASTER+TOOLS_DIR+S3BACKUP, os.path.join(INSTALL_DIR, S3BACKUP))
 	download_file(GITHUB_MASTER+TOOLS_DIR+S3CONF_SAMPLE, os.path.join(INSTALL_DIR, S3CONF))
+	logging.info('Done.')
 	print 'Please edit %s and then run: %s' % (S3CONF, S3BACKUP)
+
 
 def download_archive():
 	download_file(GITHUB_ARCHIVE, ARCHIVE_PATH)
 	unzip_file(ARCHIVE_PATH, INSTALL_DIR)
 	move_files(ARCHIVE_DIR, INSTALL_DIR)
-	shutil.rmtree(ARCHIVE_DIR)
-	os.remove(ARCHIVE_PATH)
+	delete_archive_dir()
+	delete_archive()
+	logging.info('Done.')
 
 def review_archive():
 	download_file(GITHUB_ARCHIVE, ARCHIVE_PATH)
 	list_zip(download_loc)
-	os.remove(ARCHIVE_PATH)
+	delete_archive()
+	logging.info('Done.')
 
 ############################################
 
