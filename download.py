@@ -56,10 +56,26 @@ def setup_logging(log_level='INFO'):
 
 def move_files(from_dir, to_dir):
 	logging.info('Moving files from %s to %s' % (from_dir, to_dir))
-	for f in os.listdir(from_dir):
-		src = os.path.join(from_dir, f)
-		dest = os.path.join(to_dir, f)
-		shutil.move(src, dest)
+	for dirpath, dirnames, filenames in os.walk(from_dir):
+		dir_partial = dirpath.split(ARCHIVE_DIR)[1]
+		dest_dir = os.path.join(to_dir, dir_partial)
+
+		os.makedirs(dest_dir)
+		for f in filenames:
+			from_file = os.path.join(dirpath, f)
+			to_file = os.path.join(dest_dir, f)
+			if os.path.exists(to_file):
+				logging.info('   OVERWRITE from %s to %s' % (from_file, to_file))
+			else:
+				logging.info('   From %s to %s' % (from_file, to_file))
+			try:
+				shutil.copyfile(from_file, to_file)
+			except IOError as ioe:
+				logging.error(ioe)
+			except shutil.Error as e:
+				logging.warn(e)
+			except Exception as e:
+				logging.error(e)
 	logging.info('Done.')
 
 def download_file(src, dest):
