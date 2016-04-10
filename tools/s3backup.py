@@ -34,7 +34,7 @@ try:
 	import console
 	BASE_DIR = os.path.expanduser('~/Documents')
 except ImportError:
-	BASE_DIR = os.path.dirname(os.path.realpath(__file__))
+  BASE_DIR = os.getcwd()
 	class console (object):
 		@staticmethod
 		def hud_alert(message, icon=None, duration=None):
