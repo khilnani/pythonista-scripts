@@ -2,7 +2,7 @@
 
 import appex, clipboard, console
 from markdown2 import markdown
-import ui, scene
+import ui, scene, os
 
 TEMPLATE = '''
 <!doctype html>
@@ -38,21 +38,38 @@ class MyWebView (ui.View):
 			appex.finish()
 
 def main():
-	text = ''
+	text = None
+	label = 'Shared text'
 	if appex.is_running_extension():
 		text = appex.get_text()
 	if not text:
-		console.hud_alert('Using clipboard.')
-		text = clipboard.get().strip()
+		try:
+			import editor
+			editor_file = editor.get_path()
+			if editor_file:
+				sel = console.alert('Editor or clipboard?', button1='Editor', button2='Clipboard')
+				if sel == 1:
+					editor_text = editor.get_text()
+					sel_st, sel_end = editor.get_selection()
+					label = os.path.basename(editor_file)
+					if sel_end != sel_st:
+						text = editor_text[sel_st:sel_end]
+					elif editor_text:
+						text = editor_text	
+		except ImportError:
+			pass
+	if not text:
+		label = 'Clipboard'
+		text = clipboard.get().strip()	
 	if text:
 		converted = markdown(text)
 		html = TEMPLATE.replace('{{CONTENT}}', converted)
 		
-		clip = console.alert('Copy to clipboard?', button1='Yes', button2='No', hide_cancel_button=True)
+		clip = console.alert('Replace clipboard?', button1='Yes', button2='No', hide_cancel_button=True)
 		if clip ==1:
 			clipboard.set(html)
 			console.hud_alert('HTML copied to clipboard.')
-		wv = MyWebView(name='Markdown Preview')
+		wv = MyWebView(name='Markdown - %s' % label)
 		wv.load_html(html)
 		wv.present('full_screen')
 	else:

@@ -98,6 +98,11 @@ update script
 ''', "", "")
 	return mode
 
+def friendly_path(name):
+	if BASE_DIR in name:
+		return name.split(BASE_DIR)[-1]
+	return name
+
 def download_file(src, dest):
 	logging.info('Reading %s' % (src))
 	file_content = urllib2.urlopen(src).read()
@@ -131,10 +136,11 @@ def remove_archive(archive_file):
 		logging.info('Existing archive removed.')
 
 def tar_exclude(file_path):
-	excludes = ['Icon', '.DS_Store', '.Trash', 'Examples', CONF_FILE, BACKUP_NAME]
+	excludes = ['/Icon', '/.DS_Store', '/.Trash', '/Examples', '/.git', '/'+BACKUP_NAME]
+	friendly_file_path = friendly_path(file_path)
 	for name in excludes:
-		if (name in file_path):
-			logging.info('Skipping %s' % name)
+		if (name == friendly_file_path):
+			logging.info('Skipping %s' % friendly_file_path)
 			return True
 	return False
 
@@ -152,7 +158,8 @@ def extract_tarfile(filename, dest_dir):
 		fl.extractall(dest_dir)
 		logging.info('Archive extracted.')
 	except IOError:
-		logging.info('Archive not found.')
+		logging.error('Archive extraction error.')
+		logging.error(e)
 
 def list_tarfile(filename, dest_dir):
 	logging.info('Listing ...')

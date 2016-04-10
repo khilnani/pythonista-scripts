@@ -48,30 +48,37 @@ def main():
 		console.hud_alert('No URL found.')
 		sys.exit()
 		
-	resp = console.alert('Save: %s' % url, button1='OK')
+	sel = console.alert('Save: %s ?' % url, button1='File', button2='Clipboard')
 	
 	# get url info
-	file_name = url.split("?")[0].split("/")[-1]
+	url_items = url.split("?")[0].split("/")
+	# if url ends with /, last item is an empty string
+	file_name = url_items[-1] if url_items[-1] else url_items[-2]
 	try:
 		content = urllib2.urlopen(url).read()
 	except Exception as e:
 		console.alert(e.message)
 		sys.exit()
-
-	# get file save info
-	save_dir_name = get_save_dir()	
-	save_dir = os.path.join(BASE_DIR, save_dir_name)
-	file_path = os.path.join(save_dir, file_name)
-
-	# check dirs and save
-	if not os.path.exists(save_dir):
-		os.makedirs(save_dir)
-	with open(file_path, 'w') as f:
-		f.write(content)
-		f.close()
 	
-	# wrapup
-	console.alert('Saved to: %s' % file_path, hide_cancel_button=True, button1='OK')
+	if sel == 1:
+		# get file save info
+		save_dir_name = get_save_dir()	
+		save_dir = os.path.join(BASE_DIR, save_dir_name)
+		file_path = os.path.join(save_dir, file_name)
+		try:
+			# check dirs and save
+			if not os.path.exists(save_dir):
+				os.makedirs(save_dir)
+			with open(file_path, 'w') as f:
+				f.write(content)
+				f.close()
+			# wrapup
+			console.alert('Saved to: %s' % file_path, hide_cancel_button=True, button1='OK')
+		except Exception as e:
+			console.alert(str(e), button1='OK',hide_cancel_button=True)
+	elif sel == 2:
+		clipboard.set(content)
+	
 	
 	if appex.is_running_extension():
 		appex.finish()
