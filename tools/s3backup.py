@@ -62,6 +62,8 @@ CONF_FILE = os.path.join(SCRIPT_DIR, 'aws.conf')
 GITHUB_MASTER = 'https://raw.githubusercontent.com/khilnani/pythonista/master/tools/'
 S3BACKUP_FILE = 's3backup.py'
 
+print 'BASE_DIR: %s' % BASE_DIR
+
 ############################################
 
 def load_config():
