@@ -1,0 +1,30 @@
+[
+    [
+        ".", 
+        "Current Working Directory"
+    ], 
+    [
+        "~/Documents", 
+        "Script Library"
+    ], 
+    [
+        "~", 
+        "User Home"
+    ], 
+    [
+        "$RESOURCEDIR",
+        "Pythonista Resource Bundle"
+    ],
+    [
+        "$APPDIR", 
+        "Pythonista App Bundle"
+    ],
+    [
+        "$APPGROUPDIR",
+        "App Group Shared Files"
+    ],
+    [
+        "/",
+        "File System Root"
+    ]
+]
