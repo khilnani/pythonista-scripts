@@ -59,7 +59,7 @@ def setup_logging(log_level='INFO'):
 def move_files(from_dir, to_dir):
 	logging.info('Moving files from %s to %s' % (from_dir, to_dir))
 	for dirpath, dirnames, filenames in os.walk(from_dir):
-		dir_partial = dirpath.split(ARCHIVE_DIR)[1]
+		dir_partial = dirpath.split(ARCHIVE_DIR)[-1]
 		dest_dir = os.path.join(to_dir, dir_partial)
 		if not os.path.exists(dest_dir):
 			os.makedirs(dest_dir)
@@ -99,7 +99,8 @@ def list_zip(zip_file):
 	logging.info('Lising zip %s' % (zip_file))
 	zip_ref = zipfile.ZipFile(zip_file, 'r')
 	for name in zip_ref.namelist():
-		print '  %s' % (name)
+		partial = name.split(ARCHIVE_DIR_PARTIAL)[-1]
+		print '  %s' % (partial)
 	zip_ref.close()
 
 def unzip_file(zip_file, extract_to):
