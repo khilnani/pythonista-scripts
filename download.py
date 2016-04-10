@@ -17,6 +17,8 @@ S3BACKUP = 's3backup.py'
 S3CONF_SAMPLE = 'sample.aws.conf'
 S3CONF = 'aws.conf'
 
+EXCLUDE_FILES = ['/.gitignore', '/download.py', '/README.md']
+
 ############################################
 
 machine = platform.machine()
@@ -75,7 +77,9 @@ def move_files(from_dir, to_dir, dry_run=False):
 		for f in filenames:
 			from_file = os.path.join(dirpath, f)
 			to_file = os.path.join(dest_dir, f)
-			if os.path.exists(to_file):
+			if friendly_path(to_file) in EXCLUDE_FILES:
+				logging.info('  %sSkipping %s' % (pre_msg, friendly_path(to_file)))
+			elif os.path.exists(to_file):
 				logging.info('  %sEXISTS %s' % (pre_msg, friendly_path(to_file)))
 			else:
 				logging.info('  %s%s' % (pre_msg, friendly_path(to_file)))
