@@ -3,7 +3,7 @@
 ## https://forum.omz-software.com/topic/2648/download-plain-text-html-document-and-save-content-as-text
 
 
-import os, sys, re, random, appex, console, clipboard, html2text, requests, dialogs, urllib 
+import os, sys, re, random, appex, console, clipboard, html2text, requests, dialogs, urllib
 from objc_util import *
 
 GRUBER_URLINTEXT_PAT = re.compile(ur'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))')
@@ -12,8 +12,8 @@ def main():
     if appex.is_running_extension():
         url = appex.get_url()
         if url == None:
-          text = appex.get_text()
-          url = [ mgroups[0] for mgroups in GRUBER_URLINTEXT_PAT.findall(text) ][0]
+            text = appex.get_text()
+            url = [ mgroups[0] for mgroups in GRUBER_URLINTEXT_PAT.findall(text) ][0]
     else:
         text = clipboard.get().strip()
         url = [ mgroups[0] for mgroups in GRUBER_URLINTEXT_PAT.findall(text) ][0]
@@ -29,7 +29,7 @@ def main():
     h = html2text.HTML2Text()
     try:
         r = requests.get(
-            url=url, 
+            url=url,
             headers={"User-agent": "Mozilla/5.0{0:06}".format(random.randrange(999999))}
         )
     except Exception as e:

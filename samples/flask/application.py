@@ -1,16 +1,18 @@
 # coding: utf-8
+
 from flask import Flask, request, render_template
 import socket
+
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-	return 'Hello World!'
+    return 'Hello World!'
 
 @app.route('/hello')
 @app.route('/hello/<name>')
 def hello(name=None):
-		return render_template('hello.html', name=name)
+    return render_template('hello.html', name=name)
 
 
 # Attempt at getting this device's ip address

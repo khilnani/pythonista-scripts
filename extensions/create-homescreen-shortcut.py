@@ -8,7 +8,7 @@ rawhtml = '''
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="apple-mobile-web-app-capable" content="yes">
-  
+
   <link rel="apple-touch-icon-precomposed" href="http://omz-software.com/pythonista/shortcut/Icon57.png">
   <link rel="apple-touch-icon-precomposed" sizes="72x72" href="http://omz-software.com/pythonista/shortcut/Icon72.png">
   <link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://omz-software.com/pythonista/shortcut/Icon114.png">
