@@ -36,6 +36,6 @@ html = rawhtml % (title,script,args)
 
 encoded = base64.encodestring(html)
 encoded = 'data:text/html;base64,' + encoded
-print encoded
+# print encoded
 clipboard.set(encoded)
-console.hud_alert('Encoded html copied to clipboard. Launch Safari, paste as URL and hit Enter/Go.')
+console.alert('Encoded html copied to clipboard. Launch Safari, paste as URL and hit Enter/Go.', button1='OK', hide_cancel_button=True)

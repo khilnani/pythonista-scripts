@@ -116,7 +116,7 @@ def update_script():
 	download_file(GITHUB_MASTER+S3BACKUP_FILE, os.path.join(SCRIPT_DIR, S3BACKUP_FILE))
 
 def bucket_exists(s3, bucket_name):
-	logging.info("Connecting to: %s" % bucket_name)
+	logging.info("Connecting to S3: %s" % bucket_name)
 	bucket_exists = s3.lookup(bucket_name)
 	if bucket_exists is None:
 		logging.error("Bucket %s does not exist.", bucket_name)
@@ -131,9 +131,9 @@ def remove_archive(archive_file):
 	try:
 		os.remove(archive_file)
 	except:
-		logging.info('No existing archive found.')
+		logging.info('No local archive found.')
 	else:
-		logging.info('Existing archive removed.')
+		logging.info('Local archive removed.')
 
 def tar_exclude(file_path):
 	excludes = ['/Icon', '/.DS_Store', '/.Trash', '/Examples', '/.git', '/'+BACKUP_NAME]
@@ -145,11 +145,11 @@ def tar_exclude(file_path):
 	return False
 
 def make_tarfile(filename, source_dir):
-	logging.info('Creating archive ...')
+	logging.info('Creating local archive ...')
 	with tarfile.open(filename, "w:bz2") as tar:
 		tar.add(source_dir, arcname='.', exclude=tar_exclude)
 	sz = os.path.getsize(filename) >> 20
-	logging.info('%s created, %iMB' % (filename, sz))
+	logging.info('Created %iMB %s' % (sz, friendly_path(filename) ))
 
 def extract_tarfile(filename, dest_dir):
 	logging.info('Extracting ...')
