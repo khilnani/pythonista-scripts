@@ -31,6 +31,8 @@ Scripts intended to be used with the iOS [Pythonista](http://omz-software.com/py
 
 ## Installation
 
+Below installer script provides the option to install stand alone scripts individually, like the Amazon S3 backup script, or download the full github repo.
+
 - Pythonista console:
  - Run: `import urllib2; exec urllib2.urlopen('http://khl.io/pythonista-scripts').read()`
 - Linux/Mac OS Terminal:
