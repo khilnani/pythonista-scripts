@@ -1,7 +1,7 @@
 # coding: utf-8
 
-import clipboard, datetime, console, appex
-import json, re, os, sys, shutil, urllib2
+import (clipboard, datetime, console, appex
+        json, re, os, sys, shutil, urllib2)
 
 ###########################################
 
@@ -21,10 +21,10 @@ def get_save_dir():
             config = json.load(conf_file)
             save_dir = config['TEXT']
             return save_dir
-        except Exception as e:
+        except Exception as e:  # specify which exception you expect like KeyError
             print('Config load error:')
             print(e)
-            sys.exit()
+            sys.exit(e)
     return save_dir
 
 ###########################################
@@ -32,10 +32,7 @@ def get_save_dir():
 def main():
     
     # get text from app share or clipboard
-    if appex.is_running_extension():
-        text = appex.get_url()
-    else:
-        text = clipboard.get().strip()
+    text = appex.get_url() if appex.is_running_extension() else clipboard.get().strip()
 
     # get url
     url = ''
@@ -44,7 +41,7 @@ def main():
     except:
         url = console.input_alert("URL", "", url)
     if url:
-        if not 'http' in url:
+        if not URL.startswith('http'):
             url = 'http://' + url
     else:
         console.hud_alert('No URL found.')
@@ -58,9 +55,9 @@ def main():
     file_name = url_items[-1] if url_items[-1] else url_items[-2]
     try:
         content = urllib2.urlopen(url).read()
-    except Exception as e:
+    except Exception as e:  # specify the exception that you expect
         console.alert(e.message)
-        sys.exit()
+        sys.exit(e)
 
     if sel == 1:
         # get file save info
@@ -73,10 +70,9 @@ def main():
                 os.makedirs(save_dir)
             with open(file_path, 'w') as f:
                 f.write(content)
-                f.close()
             # wrapup
             console.alert('Saved to: %s' % file_path, hide_cancel_button=True, button1='OK')
-        except Exception as e:
+        except Exception as e:  # specify the exception(s) that you expect
             console.alert(str(e), button1='OK',hide_cancel_button=True)
     elif sel == 2:
         clipboard.set(content)
