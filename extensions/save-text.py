@@ -5,7 +5,8 @@ import json, os, sys, shutil
 
 ###########################################
 
-BASE_DIR = os.path.expanduser('~/Documents')
+# share safe documents dir location
+BASE_DIR = os.getcwd().split('Documents')[0] + 'Documents'
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 CONF_FILE = os.path.join(SCRIPT_DIR, 'save.conf')
 

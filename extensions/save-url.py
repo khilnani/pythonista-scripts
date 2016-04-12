@@ -5,7 +5,8 @@ import json, re, os, sys, shutil, urllib2
 
 ###########################################
 
-BASE_DIR = os.path.expanduser('~/Documents')
+# share safe documents dir location
+BASE_DIR = os.getcwd().split('Documents')[0] + 'Documents'
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 CONF_FILE = os.path.join(SCRIPT_DIR, 'save.conf')
 
@@ -29,6 +30,7 @@ def get_save_dir():
 ###########################################
 
 def main():
+    
     # get text from app share or clipboard
     if appex.is_running_extension():
         text = appex.get_url()
