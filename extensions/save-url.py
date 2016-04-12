@@ -71,9 +71,10 @@ def main():
             with open(file_path, 'w') as f:
                 f.write(content)
             # wrapup
-            console.alert('Saved to: %s' % file_path, hide_cancel_button=True, button1='OK')
+            msg = 'Saved to: %s' % file_path
         except Exception as e:  # specify the exception(s) that you expect
-            console.alert(str(e), button1='OK',hide_cancel_button=True)
+            msg = str(e)
+        console.alert(msg, button1='OK', hide_cancel_button=True)
     elif sel == 2:
         clipboard.set(content)
 
