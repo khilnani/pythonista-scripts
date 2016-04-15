@@ -4,15 +4,6 @@ Scripts intended to be used with the iOS [Pythonista](http://omz-software.com/py
 
 ## Catalog
 
-### `tools/s3backup.py`
-
-- Backup and restore the working directory to a tar zip file in an Amazon S3 bucket.
-- Pythonista:
-  - Files downloaded to and restored from the `~/Documents` directory
-- Linux/mac os:
-  - Files downloaded to and restored from the working directory, not the directory containing the script
-  - Example: From this directory, run `python tools/s3backup.py`
-
 ### `extensions/`
 
 - Pythonista extensions for the iOS homescreen shortcuts and actions
