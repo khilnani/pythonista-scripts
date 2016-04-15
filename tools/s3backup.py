@@ -5,10 +5,69 @@ import datetime, json, urllib2
 
 ###########################################
 
+if os.environ.get('LC_CTYPE', '') == 'UTF-8':
+    os.environ['LC_CTYPE'] = 'en_US.UTF-8'
+
 machine = platform.machine()
 print 'Platform system:' + machine
 
 ###########################################
+
+def install_stash():
+    try:
+        from stash import stash
+        return True
+    except ImportError:
+        import requests as r
+        print 'Downloading Stash ...'
+        exec r.get('http://bit.ly/get-stash').text
+    try:
+        from stash import stash
+        return True
+    except ImportError:
+        return False
+    
+    return False
+
+def install_boto():
+    try:
+        import boto
+        from boto.s3.key import Key
+        from boto.s3.bucket import Bucket
+        return True
+    except ImportError:
+        if install_stash():
+            _stash = stash.StaSh()
+            print('StaSh version: ' + str(stash.__version__))
+            print('Installing AWS boto library ...')
+            _stash('pip install boto')
+            print('AWS boto library installed.')
+            print('Please restart Pythonista and re-run this script') 
+    try:
+        import boto
+        from boto.s3.key import Key
+        from boto.s3.bucket import Bucket
+        return True
+    except ImportError:
+        return False
+
+def install_awscli():
+    try:
+        import awscli.clidriver
+        return True
+    except ImportError:
+        if install_stash():
+            _stash = stash.StaSh()
+            print('StaSh version: ' + str(stash.__version__))
+            print('Installing AWS CLI library ...')
+            _stash('pip install awscli')
+            print('AWS CLI installed.')
+            print('Please restart Pythonista and re-run this script') 
+    try:
+        import awscli.clidriver
+        return True
+    except ImportError:
+        return False        
 
 try:
     import boto
@@ -16,17 +75,9 @@ try:
     from boto.s3.bucket import Bucket
 except ImportError as ie:
     if 'iP' in machine:
-        import requests as r
-        print 'Downloading Stash ...'
-        exec r.get('http://bit.ly/get-stash').text
-        from stash import stash
-        _stash = stash.StaSh()
-        print('Installing AWS boto library ...')
-        _stash('pip install boto')
-        print('AWS boto library installed.')
-        print('Please restart Pythonista and re-run this script')
+        install_boto()
     elif 'x86_64' in machine:
-        print('Please run: pip install boto')
+        print('Please run: pip install boto awscli')
     sys.exit()
 
 ############################################
@@ -57,8 +108,11 @@ BACKUP_NAME = 'pythonista_backup.tar.bz2'
 BACKUP_COPY = 'pythonista_backup.{:%Y%m%d_%H%M%S}.tar.bz2'.format(datetime.datetime.now())
 BACKUP_FILE = os.path.join(BASE_DIR, BACKUP_NAME)
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
-CONF_FILE = os.path.join(SCRIPT_DIR, 'aws.conf')
-
+CONF_NAME = 's3backup.conf'
+CONF_FILE = os.path.join(SCRIPT_DIR, CONF_NAME)
+TEST_NAME = '.s3test'
+TEST_ARCHIVE_NAME = TEST_NAME+'.tar.bz2'
+TEST_ARCHIVE = os.path.join(BASE_DIR, TEST_ARCHIVE_NAME)
 
 GITHUB_MASTER = 'https://raw.githubusercontent.com/khilnani/pythonista/master/tools/'
 S3BACKUP_FILE = 's3backup.py'
@@ -68,16 +122,21 @@ print 'BASE_DIR: %s' % BASE_DIR
 ############################################
 
 def load_config():
-    with open(CONF_FILE, 'r') as conf_file:
-        try:
+    try:
+        with open(CONF_FILE, 'r') as conf_file:
             conf = json.load(conf_file)
             for key in conf:
                 os.environ[key] = conf[key]
-        except Exception as e:
-            logging.error('Config load error:')
-            logging.error(e)
-            sys.exit()
+            logging.info('%s loaded to environment.' % CONF_NAME)
+    except Exception as e:
+        logging.warning('No %s, using AWS Credentials/Config' % CONF_NAME)
 
+def aws_configure():
+    install_awscli()
+    import awscli.clidriver
+    sys.argv.append('configure')
+    return awscli.clidriver.main()    
+    
 def setup_logging(log_level='INFO'):
     log_format = "%(message)s"
     logging.addLevelName(15, 'FINE')
@@ -95,9 +154,17 @@ archive
 extract
 restore
 backup
+configure
+dry run
 update script
 ''', "", "")
     return mode
+
+def get_bucket_name():
+    bucket_name = os.getenv('PYTHONISTA_AWS_S3_BUCKET', '')
+    if not bucket_name:
+        bucket_name = console.input_alert('S3 bucket name: ', '', bucket_name)
+    return bucket_name
 
 def friendly_path(name):
     if BASE_DIR in name:
@@ -132,12 +199,12 @@ def remove_archive(archive_file):
     try:
         os.remove(archive_file)
     except:
-        logging.info('No local archive found.')
+        logging.info('No local archive %s found.' % friendly_path(archive_file))
     else:
-        logging.info('Local archive removed.')
+        logging.info('Local archive %s removed.' % friendly_path(archive_file))
 
 def tar_exclude(file_path):
-    excludes = ['/Icon', '/.DS_Store', '/.Trash', '/Examples', '/.git', '/'+BACKUP_NAME]
+    excludes = ['/Icon', '/.DS_Store', '/.Trash', '/Examples', '/.git', '/'+TEST_NAME, '/'+TEST_ARCHIVE_NAME, '/'+BACKUP_NAME]
     friendly_file_path = friendly_path(file_path)
     for name in excludes:
         if (name == friendly_file_path):
@@ -146,14 +213,14 @@ def tar_exclude(file_path):
     return False
 
 def make_tarfile(filename, source_dir):
-    logging.info('Creating local archive ...')
+    logging.info('Creating %s ...' % friendly_path(filename))
     with tarfile.open(filename, "w:bz2") as tar:
         tar.add(source_dir, arcname='.', exclude=tar_exclude)
     sz = os.path.getsize(filename) >> 20
     logging.info('Created %iMB %s' % (sz, friendly_path(filename) ))
 
 def extract_tarfile(filename, dest_dir):
-    logging.info('Extracting ...')
+    logging.info('Extracting %s to %s...' % (friendly_path(filename), friendly_path(dest_dir)))
     try:
         fl = tarfile.open(filename, "r:bz2")
         fl.extractall(dest_dir)
@@ -163,7 +230,7 @@ def extract_tarfile(filename, dest_dir):
         logging.error(e)
 
 def list_tarfile(filename, dest_dir):
-    logging.info('Listing ...')
+    logging.info('Listing % ...' % friendly_path(filename))
     try:
         fl = tarfile.open(filename, "r:bz2")
         fl.list(verbose=False)
@@ -174,6 +241,22 @@ def list_tarfile(filename, dest_dir):
 def show_progress(num, total):
     per = int(num * 100/total)
     logging.info('  {}% completed'.format(per))
+
+def test_upload(s3, bucket_name):
+    logging.info('Testing upload of %s to S3 ...' % TEST_NAME)
+    bucket = s3.get_bucket(bucket_name)
+    k = bucket.get_key(TEST_NAME, validate=False)
+    k.set_contents_from_string(TEST_NAME, replace=True, cb=show_progress, num_cb=200)
+    logging.info('Upload test complete.')
+
+def test_download(s3, bucket_name):
+    logging.info('Testing download of %s from S3 ...' % TEST_NAME)
+    bucket = s3.get_bucket(bucket_name)
+    k = bucket.get_key(TEST_NAME, validate=True)
+    content = k.get_contents_as_string(cb=show_progress, num_cb=200)
+    if content != TEST_NAME:
+        logging.error('Test file %s read from S3 is not the one created.' % TEST_NAME)
+    logging.info('Download test complete.')
 
 def upload_archive(s3, bucket_name, key, fl):
     logging.info('Uploading to S3 ...')
@@ -196,6 +279,13 @@ def download_archive(s3, bucket_name, key, fl):
     k.get_contents_to_filename(fl, cb=show_progress, num_cb=200)
     logging.info('Download complete.')
 
+def dry_run(s3, bucket_name):
+    remove_archive(TEST_ARCHIVE)
+    make_tarfile(TEST_ARCHIVE, BASE_DIR)
+    extract_tarfile(TEST_ARCHIVE, os.path.join(BASE_DIR, TEST_NAME))
+    test_upload(s3, bucket_name)
+    test_download(s3, bucket_name)
+
 def restore(s3, bucket_name):
     remove_archive(BACKUP_FILE)
     download_archive(s3, bucket_name, BACKUP_NAME, BACKUP_FILE)
@@ -216,8 +306,6 @@ def main():
     load_config()
     mode = get_mode()
 
-    bucket_name = os.getenv('PYTHONISTA_AWS_S3_BUCKET', None)
-
     if mode == 'update script':
         update_script()
     elif mode == 'list':
@@ -227,12 +315,17 @@ def main():
         make_tarfile(BACKUP_FILE, BASE_DIR)
     elif mode == 'extract':
         extract_tarfile(BACKUP_FILE, BASE_DIR)
+    elif mode == 'configure':
+        aws_configure()
     else:
         s3 = boto.connect_s3()
         # check if bucket exists
+        bucket_name = get_bucket_name()
         if not bucket_exists(s3, bucket_name):
             sys.exit()
-        if mode == 'restore':
+        if mode == 'dry run':
+            dry_run(s3, bucket_name)
+        elif mode == 'restore':
             restore(s3, bucket_name)
         elif mode == 'backup':
             backup(s3, bucket_name)

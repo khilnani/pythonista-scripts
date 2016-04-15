@@ -23,6 +23,9 @@ except ImportError:
 
 __version__ = '1.0.0'
 
+INSTALL_PATH_DEFAULT = 'bin'
+SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
+CONF_FILE = os.path.join(SCRIPT_DIR, 'ptinstaller.conf')
 
 class InvalidGistURLError(Exception):
     pass
@@ -305,7 +308,6 @@ class CategoriesTable(object):
 
 
 class PythonistaToolsInstaller(object):
-    INSTALLATION_ROOT = os.path.expanduser('~/Documents/bin')
 
     def __init__(self):
         self.repo = PythonistaToolsRepo()
@@ -322,10 +324,23 @@ class PythonistaToolsInstaller(object):
         self.nav_view.add_subview(self.activity_indicator)
         self.activity_indicator.frame = (0, 0, self.nav_view.width, self.nav_view.height)
         self.activity_indicator.bring_to_front()
+    
+    @staticmethod
+    def _get_install_root():
+        install_path = INSTALL_PATH_DEFAULT
+        try:
+            with open(CONF_FILE, 'r') as f:
+                config = json.load(f)
+                install_path = config['install_path']
+        except Exception as e:
+            install_path = INSTALL_PATH_DEFAULT
+        install_root = os.path.expanduser('~/Documents/%s' % install_path)
+        return install_root
 
     @staticmethod
     def get_target_folder(category_name, tool_name):
-        return os.path.join(PythonistaToolsInstaller.INSTALLATION_ROOT, category_name, tool_name)
+        install_root = PythonistaToolsInstaller._get_install_root()
+        return os.path.join(install_root, category_name, tool_name)
 
     @staticmethod
     def is_tool_installed(category_name, tool_name):
@@ -382,4 +397,3 @@ class PythonistaToolsInstaller(object):
 if __name__ == '__main__':
     ptinstaller = PythonistaToolsInstaller()
     ptinstaller.launch()
-

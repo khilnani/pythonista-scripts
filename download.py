@@ -14,8 +14,8 @@ ARCHIVE_PATH = os.path.join(INSTALL_DIR, ARCHIVE_NAME)
 
 TOOLS_DIR = 'tools/'
 S3BACKUP = 's3backup.py'
-S3CONF_SAMPLE = 'sample.aws.conf'
-S3CONF = 'aws.conf'
+S3CONF_SAMPLE = 's3backup.sample.conf'
+S3CONF = 's3backup.conf'
 
 EXCLUDE_FILES = ['/.gitignore', '/download.py', '/README.md']
 

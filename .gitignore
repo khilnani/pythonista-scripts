@@ -6,6 +6,7 @@ dropbox_sync/
 .pypi_packages.
 .tabs.*
 **/aws.conf
+**/s3backup.conf
 **/jira.conf
 **/save.conf
 code/
