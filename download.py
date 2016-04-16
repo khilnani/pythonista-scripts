@@ -4,18 +4,15 @@ import os, shutil, platform, sys, logging, urllib2, zipfile
 
 INSTALL_DIR = os.getcwd()
 
-GITHUB_MASTER = 'https://raw.githubusercontent.com/khilnani/pythonista-scripts/master/'
-GITHUB_ARCHIVE = 'https://github.com/khilnani/pythonista-scripts/archive/master.zip'
+USER_NAME = 'khilnani'
+REPO_NAME = 'pythonista-scripts'
+GITHUB_MASTER = 'https://raw.githubusercontent.com/%s/%s/master/' % (USER_NAME, REPO_NAME)
+GITHUB_ARCHIVE = 'https://github.com/%s/%s/archive/master.zip' % (USER_NAME, REPO_NAME)
 
-ARCHIVE_DIR_PARTIAL = 'pythonista-scripts-master/'
+ARCHIVE_DIR_PARTIAL = '%s-master/' % REPO_NAME
 ARCHIVE_DIR = os.path.join(INSTALL_DIR, ARCHIVE_DIR_PARTIAL)
-ARCHIVE_NAME = 'pythonista-scripts.zip'
+ARCHIVE_NAME = '%s.zip' % REPO_NAME
 ARCHIVE_PATH = os.path.join(INSTALL_DIR, ARCHIVE_NAME)
-
-TOOLS_DIR = 'tools/'
-S3BACKUP = 's3backup.py'
-S3CONF_SAMPLE = 's3backup.sample.conf'
-S3CONF = 's3backup.conf'
 
 EXCLUDE_FILES = ['/.gitignore', '/download.py', '/README.md']
 
@@ -129,20 +126,12 @@ def get_selection():
     else:
         sel = console.input_alert('''
 Select an option:
-1. S3 backup/restore script
-2. List all files
-3. Download all files
+1. List all files
+2. Download all files
 ''', "", "")
     return sel
 
 ############################################
-
-def download_s3backup():
-    download_file(GITHUB_MASTER+TOOLS_DIR+S3BACKUP, os.path.join(INSTALL_DIR, S3BACKUP))
-    download_file(GITHUB_MASTER+TOOLS_DIR+S3CONF_SAMPLE, os.path.join(INSTALL_DIR, S3CONF))
-    logging.info('Done.')
-    print 'Please edit %s and then run: %s' % (S3CONF, S3BACKUP)
-
 
 def download_archive():
     download_file(GITHUB_ARCHIVE, ARCHIVE_PATH)
@@ -166,12 +155,9 @@ def main():
     setup_logging()
     sel = get_selection()
 
-    # tools/s3backup
     if sel == '1':
-        download_s3backup()
-    elif sel == '2':
         review_archive()
-    elif sel == '3':
+    elif sel == '2':
         download_archive()
 
 ############################################
