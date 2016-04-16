@@ -326,7 +326,7 @@ class PythonistaToolsInstaller(object):
         self.activity_indicator.bring_to_front()
     
     @staticmethod
-    def _get_install_root():
+    def get_install_path():
         install_path = INSTALL_PATH_DEFAULT
         try:
             with open(CONF_FILE, 'r') as f:
@@ -334,12 +334,12 @@ class PythonistaToolsInstaller(object):
                 install_path = config['install_path']
         except Exception as e:
             install_path = INSTALL_PATH_DEFAULT
-        install_root = os.path.expanduser('~/Documents/%s' % install_path)
-        return install_root
+        return install_path
 
     @staticmethod
     def get_target_folder(category_name, tool_name):
-        install_root = PythonistaToolsInstaller._get_install_root()
+        install_path = PythonistaToolsInstaller.get_install_path()
+        install_root = os.path.expanduser('~/Documents/%s' % install_path)
         return os.path.join(install_root, category_name, tool_name)
 
     @staticmethod
@@ -353,6 +353,7 @@ class PythonistaToolsInstaller(object):
     @ui.in_background
     def _install(self, btn):
         self.activity_indicator.start()
+        install_path = PythonistaToolsInstaller.get_install_path()
         target_folder = PythonistaToolsInstaller.get_target_folder(btn.category_name,
                                                                    btn.tool_name)
         try:
@@ -367,7 +368,7 @@ class PythonistaToolsInstaller(object):
             else:  # any other url types, including iTunes
                 webbrowser.open(btn.tool_url)
             btn.set_state_uninstall()
-            console.hud_alert('%s installed' % btn.tool_name, 'success', 1.0)
+            console.hud_alert('%s installed at %s' % (btn.tool_name, install_path), 'success', 1.0)
         except Exception as e:
             # clean up the directory
             if os.path.exists(target_folder):
