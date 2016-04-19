@@ -28,10 +28,10 @@ def main():
         if len(ids) > 0:
             id = ids[0]
             base_url = get_base_url()
-            url = '%s%s' % (base_url, id)
+            url = '%s/browse/%s' % (base_url, id)
             console.hud_alert('Jira ID: %s' % id)
             app=UIApplication.sharedApplication()
-            url=nsurl('http://'+url)
+            url=nsurl(url)
             app.openURL_(url)
         else:
             console.hud_alert('No Jira ID found.')
