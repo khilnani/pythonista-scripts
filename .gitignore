@@ -11,7 +11,10 @@ dropbox_sync/
 **/s3sync.conf
 **/s3sync.sample.conf
 **/s3sync.py
-**/jira.conf
+jira.conf
+jira-id.py
+jira.py
+jira.sample.conf
 **/save.conf
 code/
 downloads/
