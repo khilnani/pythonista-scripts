@@ -1,4 +1,3 @@
-
 # config files
 pythonista-scripts.zip
 pythonista-scripts-master/
@@ -9,12 +8,7 @@ dropbox_sync/
 **/aws.conf
 **/s3backup.conf
 **/s3sync.conf
-**/s3sync.sample.conf
-**/s3sync.py
-jira.conf
-jira-id.py
-jira.py
-jira.sample.conf
+**/jira.conf
 **/save.conf
 code/
 downloads/

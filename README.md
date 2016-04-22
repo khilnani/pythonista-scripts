@@ -2,7 +2,8 @@
 
 Scripts intended to be used with the iOS [Pythonista](http://omz-software.com/pythonista/) application. In some cases, as noted in the script comments, the scripts can be used on a regular linux/mac osx environment as well.
 
-> *Amazon S3 Backup/Restore script has moved to its own repo:  [https://github.com/khilnani/s3sync.py](https://github.com/khilnani/s3sync.py)*
+> - Amazon S3 Backup/Restore script has moved to its own repo:  [https://github.com/khilnani/s3sync.py](https://github.com/khilnani/s3sync.py)
+> - Newer more full featured Jira script is in its own repo:  [https://github.com/khilnani/jira.py](https://github.com/khilnani/jira.py)
 
 ## Catalog
 
