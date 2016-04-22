@@ -5,6 +5,10 @@ Description:
 Parse text to pull out jira ID and launch a browser with the URL to the Jira issue.
 Supports App Share, or clipboard
 
+License:
+The MIT License (MIT)
+Copyright (c) 2016 Nik Khilnani
+
 Github:
 https://github.com/khilnani/pythonista-scripts/
 
