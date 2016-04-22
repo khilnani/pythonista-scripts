@@ -1,7 +1,7 @@
 # coding: utf-8
 
-import (clipboard, datetime, console, appex
-        json, re, os, sys, shutil, urllib2)
+import clipboard, datetime, console, appex
+import json, re, os, sys, shutil, urllib2
 
 ###########################################
 
@@ -21,7 +21,7 @@ def get_save_dir():
             config = json.load(conf_file)
             save_dir = config['TEXT']
             return save_dir
-        except Exception as e:  # specify which exception you expect like KeyError
+        except Exception as e:
             print('Config load error:')
             print(e)
             sys.exit(e)
@@ -41,7 +41,7 @@ def main():
     except:
         url = console.input_alert("URL", "", url)
     if url:
-        if not URL.startswith('http'):
+        if not url.startswith('http'):
             url = 'http://' + url
     else:
         console.hud_alert('No URL found.')
@@ -53,11 +53,12 @@ def main():
     url_items = url.split("?")[0].split("/")
     # if url ends with /, last item is an empty string
     file_name = url_items[-1] if url_items[-1] else url_items[-2]
+    
     try:
         content = urllib2.urlopen(url).read()
-    except Exception as e:  # specify the exception that you expect
-        console.alert(e.message)
-        sys.exit(e)
+    except urllib2.URLError as e:
+        console.alert('Unable to read url.')
+        sys.exit(1)
 
     if sel == 1:
         # get file save info
@@ -72,7 +73,7 @@ def main():
                 f.write(content)
             # wrapup
             msg = 'Saved to: %s' % file_path
-        except Exception as e:  # specify the exception(s) that you expect
+        except Exception as e:
             msg = str(e)
         console.alert(msg, button1='OK', hide_cancel_button=True)
     elif sel == 2:

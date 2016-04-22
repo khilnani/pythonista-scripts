@@ -8,26 +8,33 @@ CONF_FILE = 'jira.conf'
 JIRA_PAT = re.compile('([a-zA-Z]+-[0-9]+)')
 
 
-def get_base_url():
-    with open(CONF_FILE, 'r') as conf_file:
-        try:
+def get_jira_info():
+    try:
+        with open(CONF_FILE, 'r') as conf_file:
             conf = json.load(conf_file)
-            return conf['BASE_URL']
-        except Exception as e:
-            logging.error('Config load error:')
-            logging.error(e)
-            sys.exit()
+            url = conf['BASE_URL']
+            try:
+                user = conf['USER']
+            except KeyError:
+                user = None
+            return (url, user)
+    except IOError:
+        logging.error('Could not find %s' % CONF_FILE)
+        sys.exit()
 
 def main():
-    if not appex.is_running_extension():
-        text = clipboard.get()
+    if appex.is_running_extension():
+        if appex.get_url():
+            text = appex.get_url()
+        else:
+            text = appex.get_text()
     else:
-        text = appex.get_text()
+        text = clipboard.get()
     if text:
         ids = JIRA_PAT.findall(text)
         if len(ids) > 0:
             id = ids[0]
-            base_url = get_base_url()
+            base_url, username = get_jira_info()
             url = '%s/browse/%s' % (base_url, id)
             console.hud_alert('Jira ID: %s' % id)
             app=UIApplication.sharedApplication()

@@ -28,8 +28,8 @@ def main():
             r = requests.get(
             url=url,
             headers={"User-agent": "Mozilla/5.0{0:06}".format(random.randrange(999999))})
-        except Exception as e:
-            console.alert(e.message)
+        except requests.ConnectionError as e:
+            console.alert('Unable to connect to url.')
             return True
         html_content = r.text.decode('utf-8')
         text = html2text.html2text(html_content)
