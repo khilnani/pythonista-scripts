@@ -11,6 +11,7 @@ import logging
 import sys
 import urllib2
 import getpass
+# pip install python-dateutil
 import dateutil.parser
 import datetime
 import requests
