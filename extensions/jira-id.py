@@ -2,15 +2,18 @@
 
 """
 Description:
-- Parse text to pull out jira ID and launch a browser with the URL to the Jira issue.
+Parse text to pull out jira ID and launch a browser with the URL to the Jira issue.
 Supports App Share, or clipboard
 
+Github:
+https://github.com/khilnani/pythonista-scripts/
+
 Configuration:
-- Rename 'jira.sample.conf' to 'jira.conf' and update values
+Rename 'jira.sample.conf' to 'jira.conf' and update values
 
 To use:
-- 1 - In any app, use App Share, Run in Pythonista and then select this script
-- 2 - Copy text with a Jira ID and run this script. 
+1 - In any app, use App Share, Run in Pythonista and then select this script
+2 - Copy text with a Jira ID and run this script. 
 """
 
 import appex
