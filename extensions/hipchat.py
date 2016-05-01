@@ -19,9 +19,9 @@ To use:
 2 - Run this script from within Pythonista or a unix/linux terminal/console. 
 """
 
-# Overview https://developer.atlassian.com/jiradev/jira-apis/jira-rest-apis
-# General API https://docs.atlassian.com/jira/REST/latest/
-# Agile API https://docs.atlassian.com/jira-software/REST/latest/
+# https://developer.atlassian.com/hipchat/guide/hipchat-rest-api/api-access-tokens
+# https://developer.atlassian.com/hipchat/guide/hipchat-rest-api/api-title-expansion
+# https://www.hipchat.com/docs/apiv2
 
 import json
 import re
