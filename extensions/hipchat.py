@@ -87,6 +87,7 @@ def setup_logging(log_level='INFO'):
         for ea in sys.argv:
             if ea in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'NOTSET'):
                 log_level = ea
+                sys.argv.remove(ea)
                 break
 
     logger.setLevel(log_level)
@@ -390,8 +391,6 @@ def display_unread(items):
 ############################################################
 
 def main():
-    setup_logging()
-
     api_url, base_url, username, access_token = get_conf_info()
 
     if not check_access_token(api_url, access_token):
@@ -407,6 +406,7 @@ def main():
 
 if __name__ == '__main__':
     try:
+        setup_logging()
         main()
     except KeyboardInterrupt as e:
         logger.error('User forced exit.')
