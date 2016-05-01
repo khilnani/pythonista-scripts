@@ -98,7 +98,7 @@ def get_new_access_token(api_url, base_url, username=None):
 
 def check_access_token(api_url, access_token):
     print('Checking access token ...')
-    url = '%suser?auth_token=%s' % (api_url, access_token)
+    url = '%suser?auth_token=%s&auth_test=true' % (api_url, access_token)
     r = requests.get(url)
     valid = r.status_code >= 200 and r.status_code < 400
     print('Valid: %s' % valid)
