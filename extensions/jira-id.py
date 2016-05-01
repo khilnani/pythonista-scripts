@@ -28,7 +28,7 @@ CONF_FILE = 'jira.conf'
 JIRA_PAT = re.compile('([a-zA-Z]+-[0-9]+)')
 
 
-def get_jira_info():
+def get_conf_info():
     try:
         with open(CONF_FILE, 'r') as conf_file:
             conf = json.load(conf_file)
@@ -54,7 +54,7 @@ def main():
         ids = JIRA_PAT.findall(text)
         if len(ids) > 0:
             id = ids[0]
-            base_url, username = get_jira_info()
+            base_url, username = get_conf_info()
             url = '%s/browse/%s' % (base_url, id)
             console.hud_alert('Jira ID: %s' % id)
             app=UIApplication.sharedApplication()
