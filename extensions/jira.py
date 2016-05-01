@@ -100,25 +100,12 @@ def get_new_cookie(base_url, username=None):
     update_conf_info(jsessionid, username)
     return jsessionid
 
-def check_jsessionid(base_url, jsessionid):
-    print('Checking session ...')
-    url = '%s/rest/api/2/myself' % base_url
-    r = requests.get(url, cookies={'JSESSIONID':jsessionid})
-    valid = r.status_code >= 200 and r.status_code < 400
-    return valid
-
-def get_issue_info(base_url, jsessionid, key):
-    print('Getting jira issue data ...')
-    url = '%s/rest/api/2/issue/%s' % (base_url, key)
-    http_url = '%s/browse/%s' % (base_url, key) 
-    jira_data = None
+def get(base_url, jsessionid, path):
+    url = base_url + path
     try:
-        r = requests.get(url, cookies={'JSESSIONID':jsessionid})      
-        if r.status_code == 200:
-            jira_data = r.json()
-        elif r.status_code == 404:
-            print('Issue not found.')
-            sys.exit(1)            
+        r = requests.get(url, cookies={'JSESSIONID':jsessionid})
+        valid = r.status_code >= 200 and r.status_code < 400
+        return (valid, r)
     except ValueError as e:
         print e
         print r.headers
@@ -126,6 +113,25 @@ def get_issue_info(base_url, jsessionid, key):
     except requests.exceptions.SSLError as e:
         print e
         sys.exit(e)
+
+def check_jsessionid(base_url, jsessionid):
+    print('Checking session ...')
+    path = '/rest/api/2/myself'
+    valid, r = get(base_url, jsessionid, path)
+    return valid
+
+def get_issue_info(base_url, jsessionid, key):
+    print('Getting jira issue data ...')
+    path = '/rest/api/2/issue/%s' % key
+    http_url = '%s/browse/%s' % (base_url, key) 
+    jira_data = None
+    valid, r = get(base_url, jsessionid, path)
+    if valid:
+        jira_data = r.json()
+    else:
+        print('Issue not found.')
+        sys.exit(1) 
+    
     try:
         f = jira_data['fields']
         print('--------------------------------------')
