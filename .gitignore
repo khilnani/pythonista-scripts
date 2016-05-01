@@ -9,6 +9,7 @@ dropbox_sync/
 **/s3backup.conf
 **/s3sync.conf
 **/jira.conf
+**/hipchat.conf
 **/save.conf
 code/
 downloads/

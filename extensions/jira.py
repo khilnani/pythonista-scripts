@@ -17,7 +17,9 @@ Rename 'jira.sample.conf' to 'jira.conf' and update values
 
 To use:
 1 - In any app, use App Share, Run in Pythonista and then select this script
-2 - Copy text with a Jira ID and run this script. 
+2 - Copy text with a Jira ID and run this script in Pythonista.
+3 - Run this script in a linux/os x terminal with the JIRA ID as a command line arg
+    eg. python jira.py ST-1222
 """
 
 # Overview https://developer.atlassian.com/jiradev/jira-apis/jira-rest-apis
@@ -48,12 +50,14 @@ def df(s):
         print (e)
     return sf
 
-def update_jira_info(id):
-    base_url, username, jsessionid = get_jira_info()
+def update_conf_info(id, user=None):
+    base_url, username, jsessionid = get_conf_info()
     conf = {}
     if base_url:
         conf['BASE_URL'] = base_url
-    if username:
+    if user:
+        conf['USER'] = user
+    elif username:
         conf['USER'] = username
     if id:
         conf['JSESSIONID'] = id
@@ -66,7 +70,7 @@ def update_jira_info(id):
         logging.error('Could not write %s' % CONF_FILE)
         sys.exit()
 
-def get_jira_info():
+def get_conf_info():
     try:
         with open(CONF_FILE, 'r') as conf_file:
             conf = json.load(conf_file)
@@ -93,7 +97,7 @@ def get_new_cookie(base_url, username=None):
     body = {"username": username, "password":password}
     r = requests.post(url, json=body)
     jsessionid = r.cookies['JSESSIONID']
-    update_jira_info(jsessionid)
+    update_conf_info(jsessionid, username)
     return jsessionid
 
 def check_jsessionid(base_url, jsessionid):
@@ -204,7 +208,7 @@ def main():
         else:
             key = raw_input('Jira ID:')
         
-        base_url, username, jsessionid = get_jira_info() 
+        base_url, username, jsessionid = get_conf_info() 
         
         if check_jsessionid(base_url, jsessionid):
             get_issue_info(base_url, jsessionid, key)

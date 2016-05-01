@@ -17,7 +17,7 @@ Rename 'jira.sample.conf' to 'jira.conf' and update values
 
 To use:
 1 - In any app, use App Share, Run in Pythonista and then select this script
-2 - Copy text with a Jira ID and run this script. 
+2 - Copy text with a Jira ID and run this script within Pythonista. 
 """
 
 import appex
