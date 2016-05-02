@@ -10,7 +10,7 @@ dropbox_sync/
 **/s3sync.conf
 **/jira.conf
 **/hipchat.conf
-**/.hipchat_cache
+**/hipchat_cache.json
 **/save.conf
 code/
 downloads/

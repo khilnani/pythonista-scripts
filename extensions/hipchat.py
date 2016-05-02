@@ -40,9 +40,12 @@ import requests
 ############################################################
 
 CONF_FILE = 'hipchat.conf'
-CACHE_FILE = '.hipchat_cache'
+CACHE_FILE = 'hipchat_cache.json'
 
 logger = None
+
+__version__ = '0.1.0'
+print 'Version: ' + __version__
 
 ############################################################
 
@@ -65,6 +68,14 @@ def df(d):
         print (e)
     return sf
 
+def dfiso(d):
+    sf = ''
+    try:
+        sf = d.strftime('%Y/%m/%d %H:%M:%S')
+    except Exception as e:
+        print (e)
+    return sf
+
 def dt(ts):
     d = None
     try:
@@ -78,14 +89,19 @@ def dt(ts):
 def setup_logging(log_level='INFO'):
     global logger
 
+    logging.addLevelName(9, 'TRACE')
+    def trace(self, message, *args, **kws):
+        if self.isEnabledFor(9):
+            self._log(9, message, args, **kws)
+    logging.Logger.trace = trace
+    
     log_format = "%(message)s"
-    logging.addLevelName(15, 'FINE')
     logging.basicConfig(format=log_format)
     logger = logging.getLogger(__name__)
 
     if len(sys.argv) > 1:
         for ea in sys.argv:
-            if ea in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'NOTSET'):
+            if ea in ('CRITICAL', 'ERROR', 'WARNING', 'INFO' , 'DEBUG', 'TRACE', 'NOTSET'):
                 log_level = ea
                 sys.argv.remove(ea)
                 break
@@ -100,18 +116,18 @@ def request_error(req):
 
 ############################################################
 
-def update_conf_info(token=None, user=None):
-    api_url, base_url, username, access_token = get_conf_info()
+def update_conf_info(token=None, email=None):
+    api_url, base_url, useremail, access_token = get_conf_info()
     conf = {}
 
     if api_url:
         conf['API_URL'] = api_url
     if base_url:
         conf['BASE_URL'] = base_url
-    if user:
-        conf['USER'] = user
-    elif username:
-        conf['USER'] = username
+    if email:
+        conf['USER_EMAIL'] = email
+    elif useremail:
+        conf['USER_EMAIL'] = useremail
     if token:
         conf['ACCESS_TOKEN'] = token
     elif access_token:
@@ -132,14 +148,14 @@ def get_conf_info():
             api_url = conf['API_URL']
             base_url = conf['BASE_URL']
             try:
-                username = conf['USER']
+                useremail = conf['USER_EMAIL']
             except KeyError:
-                username = None
+                useremail = None
             try:
                 access_token = conf['ACCESS_TOKEN']
             except KeyError:
                 access_token = None
-            return (api_url, base_url, username, access_token)
+            return (api_url, base_url, useremail, access_token)
     except IOError:
         logger.error('Could not find %s' % CONF_FILE)
         sys.exit(1)
@@ -161,7 +177,7 @@ def get_cache():
               users= None
             return (rooms, users)
     except IOError:
-        logger.info('Ignoring: Could not find %s' % CACHE_FILE)
+        logger.trace('Ignoring: Could not find %s' % CACHE_FILE)
     except ValueError:
         logger.error('Ignoring: Invalid JSON in %s' % CONF_FILE)
 
@@ -197,7 +213,7 @@ def get(api_url, access_token, path):
         url = url + '?'
     url = url + '&auth_token=' + access_token
     try:
-        #print(url)
+        logger.trace('Getting ' + url)
         r = requests.get(url)
         valid = r.status_code >= 200 and r.status_code < 400
         if not valid:
@@ -215,25 +231,25 @@ def get(api_url, access_token, path):
         sys.exit(e)
 
 def check_access_token(api_url, access_token):
-    print('Checking access token ...')
+    logger.info('Checking access token ...')
     path = 'user?auth_test=true'
     valid, r = get(api_url, access_token, path)
     return valid
 
-def get_new_access_token(api_url, base_url, username=None):
-    print('Updating access token ...')
-    if not username:
-        username = raw_input('Username:')
-    print('Tip: Get a personal access token from: https://www.hipchat.com/account/api')
+def get_new_access_token(api_url, base_url, useremail=None):
+    logger.info('Updating access token ...')
+    if not useremail:
+        useremail = raw_input('User email:')
+    logger.info('Tip: Get a personal access token from: https://www.hipchat.com/account/api')
     access_token = getpass.getpass('Access token:')
     if access_token:
-        update_conf_info(access_token, username)
+        update_conf_info(access_token, useremail)
     return access_token
 
 ############################################################
 
 def get_rooms(api_url, access_token):
-    print('Getting rooms ...')
+    logger.info('Getting rooms ...')
     path = 'room?expand=items&max-results=1000'
     rooms = {}
     valid, r = get(api_url, access_token, path)
@@ -244,8 +260,20 @@ def get_rooms(api_url, access_token):
         request_error(r)
     return rooms
 
+def get_auto_join_rooms(api_url, access_token, id_or_email):
+    logger.info('Getting auto-join rooms ...')
+    path = 'user/%s/preference/auto-join?expand=items&max-results=1000' % id_or_email
+    rooms = {}
+    valid, r = get(api_url, access_token, path)
+    if valid:
+        json_data = r.json()
+        rooms = json_data['items']
+    else:
+        request_error(r)
+    return rooms
+
 def get_users(api_url, access_token):
-    print('Getting users ...')
+    logger.info('Getting users ...')
     path = 'user?expand=items&max-results=1000'
     users = {}
     valid, r = get(api_url, access_token, path)
@@ -256,17 +284,17 @@ def get_users(api_url, access_token):
         request_error(r)
     return users
 
-def refresh_cache(api_url, access_token):
-    print('Checking cache ...')
+def refresh_cache(api_url, access_token, id_or_email):
+    logger.info('Reviewing cache ...')
     rooms, users = get_cache()
     if not rooms:
-        rooms = get_rooms(api_url, access_token)
+        rooms = get_auto_join_rooms(api_url, access_token, id_or_email)
         update_cache(rooms=rooms)
-    print('Rooms: %s' % len(rooms))
+    logger.info('  Rooms: %s' % len(rooms))
     if not users:
         users= get_users(api_url, access_token)
         update_cache(users=users)
-    print('Users: %s' % len(users))
+    logger.info('  Users: %s' % len(users))
     return (rooms, users)
 
 def get_info_for_xmpp(rooms, users, xmpp_id):
@@ -278,7 +306,7 @@ def get_info_for_xmpp(rooms, users, xmpp_id):
             return (u['id'], 'user', u['name'], u['email'])
     return (None, None, None, None)
 
-def unread_room(api_url, access_token, id_or_name, mid):
+def unread_room(api_url, access_token, id_or_name, name, mid):
     path = 'room/%s/history/latest' % id_or_name
     valid, r = get(api_url, access_token, path)
     items = []
@@ -300,17 +328,19 @@ def unread_room(api_url, access_token, id_or_name, mid):
                 newer = True
             else:
                 found = (id == mid)
-            if found:
-                logger.debug('+++++ %s on %s by %s: %s' % (id, df(dutc), uname, msg))
+            if found and not newer:
+                logger.trace('  ++ %s on %s by %s: %s' % (id, df(dutc), uname, msg))
             if newer:
-                logger.debug('----- %s on %s' % (id, df(dutc)))
+                logger.debug('  -- %s on %s by %s' % (id, df(dutc), uname))
                 #print('By %s on %s:\n%s' % (uname, df(dutc), msg))
                 items.append('By %s on %s:\n%s' % (uname, df(dutc), msg))
+        if len(items) > 0:
+            logger.info('  %s: %s new.' % (name, len(items)))
     else:
         request_error(r)
     return items
 
-def unread_user(api_url, access_token, id_or_email, mid):
+def unread_user(api_url, access_token, id_or_email, name, mid):
     path = 'user/%s/history/latest' % id_or_email
     valid, r = get(api_url, access_token, path)
     items = []
@@ -332,53 +362,56 @@ def unread_user(api_url, access_token, id_or_email, mid):
                 newer = True
             else:
                 found = (id == mid)
-            if found:
-                logger.debug('+++++ %s on %s by %s: %s' % (id, df(dutc), uname, msg))
+            if found and not newer:
+                logger.trace('  ++ %s on %s by %s: %s' % (id, df(dutc), uname, msg))
             if newer:
-                logger.debug('----- %s on %s' % (id, df(dutc)))
-                #print('By %s on %s:\n%s' % (uname, df(dutc), msg))
+                logger.debug('  -- "%s on %s by %s' % (id, df(dutc), uname))
+                #print('By %s on %s:\n%s' %  (uname, df(dutc), msg))
                 items.append('By %s on %s:\n%s' % (uname, df(dutc), msg))
+        if len(items) > 0:
+            logger.info('  %s: %s new.' % (name, len(items)))
     else:
         request_error(r)
     return items
 
 def get_unread_summary(api_url, access_token, rooms, users):
-    print('Looking for unread messages ...')
+    logger.info('Looking for unread messages ...')
     # get last read messages
     # then, for each room or user, check the recent history
     # locate the last read message in the history, and collect newer ones
     path= 'readstate?expand=items.unreadCount'
     valid, r = get(api_url, access_token, path)
+    items = {}
+    i = 0
     if valid:
         json_data = r.json()
-        items = {}
-        i = 0
         for item in json_data['items']:
-            i = i+1
-            print ('%s of %s' % (i, len(json_data['items'])))
             mid = item['mid']
             ts = item['timestamp']
             d = dt(ts)
             xmpp_id= item['xmppJid']
             id, idtype, name, email = get_info_for_xmpp(rooms, users, xmpp_id)
-            logger.debug('######## %s (%s): %s (%s) %s' % (id, xmpp_id, df(d), ts, mid))
+            if id:
+                i=i+1
+                logger.debug('  %s. %s (%s)' % (i, name, dfiso(d)))
+            logger.trace('  ## %s (%s): %s (%s) %s' % (id, xmpp_id, df(d), ts, mid))
             if id and idtype == 'room':
                 #print('ROOM: %s (%s) MSG: %s (%s)' % (name, id, df(d), mid))
-                _items = unread_room(api_url, access_token, id, mid)
+                _items = unread_room(api_url, access_token, id, name, mid)
                 if len(_items) > 0:
                     items[name] = _items
             elif id and idtype =='user':
                 #print('USER: %s (%s) MSG: %s (%s)' % (name, id, df(d), mid))
-                _items = unread_user(api_url, access_token, id, mid)
+                _items = unread_user(api_url, access_token, id, name, mid)
                 if len(_items) > 0:
                     items[name] = _items
             else:
-                logger.warn('No user or room id found for xmpp_id: %s' % xmpp_id)
-        return items
-    return None
+                logger.trace('No user or room id found for xmpp_id: %s' % xmpp_id)
+    logger.info('Done checking %s rooms/conversations.' % i)
+    return items
 
 def display_unread(items):
-    print('Unread count: %s' % len(items))
+    logger.debug('Unread count: %s' % len(items))
     for key in items:
         print('-------------------------------------------')
         print key
@@ -391,16 +424,19 @@ def display_unread(items):
 ############################################################
 
 def main():
-    api_url, base_url, username, access_token = get_conf_info()
+    api_url, base_url, useremail, access_token = get_conf_info()
 
     if not check_access_token(api_url, access_token):
-        access_token = get_new_access_token(api_url, base_url, username)
+        access_token = get_new_access_token(api_url, base_url, useremail)
         if check_access_token(api_url, access_token):
             logger.error('The access token supplied is not valid.')
             sys.exit(1)
-    rooms, users = refresh_cache(api_url, access_token)
+    rooms, users = refresh_cache(api_url, access_token, useremail)
     items = get_unread_summary(api_url, access_token, rooms, users)
-    #display_unread(items)
+    show_details = raw_input('Show details? (y/n): ')
+    if show_details == 'y':
+        display_unread(items)
+    logger.info('Done.')
 
 ############################################################
 
