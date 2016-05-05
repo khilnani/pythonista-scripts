@@ -1,1 +1,0 @@
-GREETINGS = "Ohai, Terra!"
