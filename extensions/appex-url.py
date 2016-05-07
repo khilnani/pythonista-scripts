@@ -6,10 +6,10 @@ import requests
 from urlparse import urlparse
 from urllib import url2pathname
 
+
 def main():
     if not appex.is_running_extension():
-        print 'Running in Pythonista app, using test data...\n'
-        url = 'http://example.com/home'
+        url = 'http://google.com/hmm'
     else:
         url = appex.get_url()
     if url:

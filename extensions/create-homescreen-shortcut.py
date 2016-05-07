@@ -17,9 +17,7 @@ rawhtml = '''
 <body>
   <script type="text/javascript">
   if (window.navigator.standalone) {
-    var scriptName = '%s'
-    var args = '%s'
-    window.location.href = "pythonista://" + scriptName + "?action=run&args=" + args;
+    window.location.href = "%s"
     setTimeout(function(){ window.close(); }, 3000);
   } else {
     alert('To save as a shortcut, please use the "Share" menu and select the "Add to Home Screen" option.');
@@ -32,10 +30,12 @@ rawhtml = '''
 title = console.input_alert('Title')
 script = console.input_alert('Script')
 args = console.input_alert('Args')
-html = rawhtml % (title,script,args)
+urlscheme = "pythonista://" + script + "?action=run&args=" + args;
+html = rawhtml % (title,urlscheme)
 
 encoded = base64.encodestring(html)
 encoded = 'data:text/html;base64,' + encoded
 # print encoded
 clipboard.set(encoded)
+print(urlscheme)
 console.alert('Encoded html copied to clipboard. Launch Safari, paste as URL and hit Enter/Go.', button1='OK', hide_cancel_button=True)
