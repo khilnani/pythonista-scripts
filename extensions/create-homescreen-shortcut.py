@@ -26,11 +26,17 @@ rawhtml = '''
 </body>
 </html>
 '''
+py_version = console.alert('Select Pythonista version', button1='2', button2='3')
+if py_version == 1:
+    scheme = 'pythonista'
+elif py_version == 2:
+    scheme = 'pythonista3'
 
 title = console.input_alert('Title')
 script = console.input_alert('Script')
 args = console.input_alert('Args')
-urlscheme = "pythonista://" + script + "?action=run&args=" + args;
+
+urlscheme = scheme + "://" + script + "?action=run&args=" + args;
 html = rawhtml % (title,urlscheme)
 
 encoded = base64.encodestring(html)
