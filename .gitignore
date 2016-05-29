@@ -13,6 +13,7 @@ dropbox_sync/
 **/hipchat_cache.json
 **/save.conf
 code/
+git/
 downloads/
 
 # noise
