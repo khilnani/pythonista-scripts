@@ -37,6 +37,7 @@ try:
 except KeyboardInterrupt:
     print("Shutting down ...")
     httpd.shutdown()
+    httpd.socket.close()
     httpd.server_close()
     print("Done.")
     
