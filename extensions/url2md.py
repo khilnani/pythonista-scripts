@@ -33,7 +33,7 @@ def main():
             headers={"User-agent": "Mozilla/5.0{0:06}".format(random.randrange(999999))}
         )
     except Exception as e:
-        console.alert(e.message)
+        raise(e.message)
         return True
 
     html_content = r.text.decode('utf-8')

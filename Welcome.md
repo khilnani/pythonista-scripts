@@ -39,25 +39,21 @@ If you're new to Pythonista, here are some tips to help you get up and running:
 *	Swipe left on a file in the script library to open it in a new tab or move it to the trash. 
 
 
-#  What's New in 3.0
+#  What's New in 3.1
 
 For full release notes, please have a look at the "What's New in Pythonista" section in the documentation. These are just the highlights:
 
-*	Pythonista now supports Python 3.5 in addition to 2.7. You can select the default interpreter in the settings. It's also possible to override the default interpreter for individual scripts.
+*	The console contains a new object inspector panel that allows you to view a list of all global variables and their attributes/members. Tap the `(i)` button to show or hide it.
 
-*	The new debugger allows you to set breakpoints in a script. It's also used for showing exceptions, and allows you to inspect tracebacks and variables in a stack frame visually.
+*	The new Pythonista Today widget allows you to run a script in Notification Center (or on the home/lock screen). You can find more information in the `appex` module documentation, and various examples of widget scripts are available in the updated *Examples* folder.
 
-*	On iPad Air 2 and later, Pythonista can be run side-by-side with another app, using the iOS 9 split-screen feature.
+*	Python 2 mode now uses Python 2.7.12 instead of 2.7.5.
 
-*	The new Today widget allows you to run Python scripts directly in Notification Center.
+*	When using the share sheet extension with a file input (e.g. sharing a Mail attachment), an additional "Import File" option is shown for non-Python files.
 
-*	The PEP-8 style checker highlights stylistic issues with your code directly in the editor.
+*	The `speech` module contains new functions for speech recognition, in addition to speech synthesis (iOS 10 only).
 
-*	Code completion can now use fuzzy matching to make better suggestions. For example, typing `rge` also suggests `range()` now. If you use an external Bluetooth keyboard, you can also navigate completion suggestions with the arrow keys now.
-
-*	Using snippets, you can insert frequently-used pieces of code more quickly. You can define abbreviations for snippets that show up in code completion suggestions.  
-
-*	The `photos` module has been improved significantly. You can now access (and create) albums, modify metadata, and even edit the content of an image in-place.
+*	The `sound` module contains a new `Recorder` class for recording audio files from the microphone. `sound.play_effect` and `sound.Player` have also been improved to support stereo panning.
 
 
 # Feedback
