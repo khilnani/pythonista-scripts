@@ -1,20 +1,6 @@
 # config files
-pythonista-scripts.zip
-pythonista-scripts-master/
 dropbox_sync/
-.pypi_packages.
-.tabs.*
-.s3test
 **/aws.conf
-**/s3backup.conf
-**/s3sync.conf
-**/jira.conf
-**/hipchat.conf
-**/hipchat_cache.json
-**/save.conf
-code/
-bin/
-downloads/
 
 # noise
 **/.DS_Store
