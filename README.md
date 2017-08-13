@@ -8,21 +8,21 @@ Scripts intended to be used with the iOS [Pythonista](http://omz-software.com/py
 
 ## Catalog
 
+### `clipboard/`
+
+- Scripts that do no use the Pythonista App Extensions, but just Clipboard content.
+
 ### `extensions/`
 
-- Pythonista extensions for the iOS homescreen shortcuts and actions
+- Pythonista App Extensions for the iOS homescreen shortcuts and actions.
 
-### `samples/`
+### `scripts/`
 
-- Sample scripts designed to work in pythonista and on linux/mac os
-
-### `site-packages/`
-
-- Pythonista specific installed library, contains modules installed via pip and manually
+- General scripts. eg. http server.
 
 ### `thirdparty/`
 
-- Scripts and repos I have downloaded from elsewhere
+- Scripts and repos I have downloaded from elsewhere.
 
 ## Installation
 
