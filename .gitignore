@@ -3,6 +3,7 @@ dropbox_sync/
 **/aws.conf
 
 # noise
+scripts/documentation
 **/.DS_Store
 
 # Archives
