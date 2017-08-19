@@ -1,0 +1,4 @@
+argparse
+beautifulsoup4
+urllib3
+urlparse3
