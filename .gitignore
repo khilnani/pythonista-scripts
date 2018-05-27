@@ -2,6 +2,9 @@
 dropbox_sync/
 **/aws.conf
 
+# iCloud files
+**/*.icloud
+
 # noise
 scripts/documentation
 **/.DS_Store
@@ -71,3 +74,5 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+/extensions/.json-yaml-clipboard.py.icloud
+/extensions/.appex-json-yaml-clipboard.py.icloud
